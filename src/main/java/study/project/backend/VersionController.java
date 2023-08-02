@@ -8,6 +8,6 @@ public class VersionController {
 
     @GetMapping("/version")
     public String serverVersionCheck() {
-        return "Version 0.0.1";
+        return "Version 0.0.2";
     }
 }

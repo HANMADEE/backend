@@ -25,6 +25,6 @@ class VersionControllerTest {
         String version = versionController.serverVersionCheck();
 
         // then
-        assertThat(version).isEqualTo("Version 0.0.1");
+        assertThat(version).isEqualTo("Version 0.0.2");
     }
 }
