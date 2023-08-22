@@ -1,0 +1,28 @@
+ifndef::snippets[]
+:snippets: ../../build/generated-snippets
+endif::[]
+= REST API 문서
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+== 서버 도메인
+----
+ec2-13-124-147-123.ap-northeast-2.compute.amazonaws.com
+----
+
+= 🌐 Common
+== 공통 API 규격
+include::api/common/status.adoc[]
+
+== 응답 상태 코드 및 메세지
+include::api/common/statusDetail.adoc[]
+
+= 📈 API
+
+== User API
+include::api/user/user.adoc[]
+

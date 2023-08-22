@@ -3,6 +3,8 @@ package study.project.backend.domain.user.response;
 import lombok.*;
 import study.project.backend.domain.user.entity.Users;
 
+import java.util.Optional;
+
 public class UserResponse {
 
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -12,6 +14,7 @@ public class UserResponse {
     public static class OAuth {
         private String email;
         private String name;
+        private Optional<String> profileImageUrl;
     }
 
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -22,6 +25,7 @@ public class UserResponse {
         private Long userId;
         private String email;
         private String nickName;
+        private String profileImageUrl;
         private String accessToken;
         private String refreshToken;
 
@@ -30,6 +34,7 @@ public class UserResponse {
                     .userId(user.getUserId())
                     .email(user.getEmail())
                     .nickName(user.getNickName())
+                    .profileImageUrl(user.getProfileImageUrl())
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
                     .build();

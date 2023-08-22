@@ -26,18 +26,19 @@ import static study.project.backend.global.common.Result.FAIL;
 public class UserService {
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final List<OAuth2LoginService> oAuth2LoginServices;
-    private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
+    private final List<OAuth2LoginService> oAuth2LoginServices;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public UserResponse.Login googleLogin(String code, Platform platform) {
+    public UserResponse.Login socialLogin(String code, Platform platform) {
         // OAuth 로그인 진행
         UserResponse.OAuth socialLoginUser = toSocialLogin(code, platform);
         Users userEntity = Users.builder()
                 .email(socialLoginUser.getEmail())
                 .nickName(socialLoginUser.getName())
+                .profileImageUrl(socialLoginUser.getProfileImageUrl().orElse("default.png"))
                 .password(passwordEncoder.encode(platform.name()))
                 .authority(ROLE_USER)
                 .build();
