@@ -26,7 +26,6 @@ jobs:
       - run : echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.yml
       - run : cat ./src/main/resources/application.yml
 
-      - run : mkdir ./src/test/resources/
       - run: touch ./src/test/resources/application.yml
       - run: echo "${{ secrets.TEST_APPLICATION }}" > ./src/test/resources/application.yml
       - run: cat ./src/test/resources/application.yml
