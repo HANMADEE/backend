@@ -52,7 +52,9 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(
-                                "/version", "/auth/signin","/login/kakao"
+                                "/docs/*",
+                                "/version",
+                                "/auth/signin", "/login/kakao"
                         )
                         .permitAll()
                 )
