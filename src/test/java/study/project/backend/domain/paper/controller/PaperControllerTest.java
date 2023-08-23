@@ -20,11 +20,11 @@ class PaperControllerTest extends ControllerTestSupport {
 
         // when // then
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/paper")
-                        .header("Authorization", "token")
-                        .content(objectMapper.writeValueAsString(request))
-                        .contentType(APPLICATION_JSON)
-        )
+                        MockMvcRequestBuilders.post("/paper")
+                                .header("Authorization", "Bearer Token")
+                                .content(objectMapper.writeValueAsString(request))
+                                .contentType(APPLICATION_JSON)
+                )
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -38,7 +38,7 @@ class PaperControllerTest extends ControllerTestSupport {
         // when // then
         mockMvc.perform(
                         MockMvcRequestBuilders.post("/paper")
-                                .header("Authorization", "token")
+                                .header("Authorization", "Bearer Token")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(APPLICATION_JSON)
                 )
@@ -46,4 +46,18 @@ class PaperControllerTest extends ControllerTestSupport {
                 .andExpect(status().isBadRequest());
     }
 
+    @DisplayName("롤링페이퍼 선물하기 API")
+    @Test
+    void giftRollingPaper() throws Exception {
+        // given
+        // when // then
+        mockMvc.perform(
+                        MockMvcRequestBuilders.patch("/paper/gift")
+                                .header("Authorization", "Bearer Token")
+                                .param("paperId", "1")
+                                .param("giftedUserId", "3")
+                )
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }
