@@ -37,9 +37,7 @@ public class Paper extends BaseEntity {
 
     @NotNull
     private Boolean isOpen;
-
     @NotNull
     private Boolean isLikeOpen;
 
-    private LocalDateTime postDate;
 }
