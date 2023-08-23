@@ -1,0 +1,12 @@
+=== 롤링페이퍼 만들기 API
+
+==== HTTP Request Headers
+include::{snippets}/createRollingPaper/request-headers.adoc[]
+
+==== HTTP Request Body
+include::{snippets}/createRollingPaper/http-request.adoc[]
+include::{snippets}/createRollingPaper/request-fields.adoc[]
+
+==== HTTP Response Body
+include::{snippets}/createRollingPaper/http-response.adoc[]
+include::{snippets}/createRollingPaper/response-fields.adoc[]

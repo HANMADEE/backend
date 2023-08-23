@@ -26,3 +26,6 @@ include::api/common/statusDetail.adoc[]
 == User API
 include::api/user/user.adoc[]
 
+== RollingPaper API
+include::api/paper/paper.adoc[]
+
