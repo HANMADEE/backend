@@ -6,9 +6,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+import study.project.backend.VersionController;
 import study.project.backend.domain.user.controller.UserController;
 
 @WebMvcTest(controllers = {
+        VersionController.class,
         UserController.class
 })
 @AutoConfigureMockMvc(addFilters = false)
@@ -22,4 +24,7 @@ public abstract class ControllerTestSupport {
 
     @MockBean
     protected UserController userController;
+
+    @MockBean
+    protected VersionController versionController;
 }
