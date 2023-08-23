@@ -52,7 +52,7 @@ public class PaperControllerDocsTest extends RestDocsSupport {
         // when // then
         mockMvc.perform(
                         RestDocumentationRequestBuilders.post("/paper")
-                                .header("Authorization", "token")
+                                .header("Authorization", "Bearer token")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(APPLICATION_JSON)
                 )
@@ -62,7 +62,7 @@ public class PaperControllerDocsTest extends RestDocsSupport {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestHeaders(
-                                headerWithName("Authorization").description("token")
+                                headerWithName("Authorization").description("Bearer token")
                         ),
                         requestFields(
                                 fieldWithPath("subject").type(STRING).description("주제"),
