@@ -29,4 +29,21 @@ class PaperControllerTest extends ControllerTestSupport {
                 .andExpect(status().isOk());
     }
 
+    @DisplayName("롤링페이퍼 만들기 API - 공개 여부 미선택 실패")
+    @Test
+    void createRollingPaperWithNotInsertedIsOpenThrowException() throws Exception {
+        // given
+        PaperRequest.Create request = new PaperRequest.Create("생일", null, null, false);
+
+        // when // then
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post("/paper")
+                                .header("Authorization", "token")
+                                .content(objectMapper.writeValueAsString(request))
+                                .contentType(APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
 }
