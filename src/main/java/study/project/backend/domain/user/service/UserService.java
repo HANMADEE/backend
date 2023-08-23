@@ -50,7 +50,7 @@ public class UserService {
 
         // 토큰 발급
         String accessToken = tokenProvider.createToken(
-                user.getUserId(), getAuthentication(user.getEmail(), platform.name())
+                user.getId(), getAuthentication(user.getEmail(), platform.name())
         );
         String refreshToken = tokenProvider.createRefreshToken(user.getEmail());
 
