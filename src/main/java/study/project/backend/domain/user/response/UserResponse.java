@@ -31,7 +31,7 @@ public class UserResponse {
 
         public static Login response(Users user, String accessToken, String refreshToken) {
             return Login.builder()
-                    .userId(user.getUserId())
+                    .userId(user.getId())
                     .email(user.getEmail())
                     .nickName(user.getNickName())
                     .profileImageUrl(user.getProfileImageUrl())

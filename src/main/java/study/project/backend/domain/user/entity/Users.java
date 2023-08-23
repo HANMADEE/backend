@@ -16,7 +16,7 @@ public class Users {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    private Long userId;
+    private Long id;
 
     @Enumerated(STRING)
     private Authority authority;
