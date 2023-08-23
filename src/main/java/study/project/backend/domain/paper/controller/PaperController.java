@@ -3,10 +3,7 @@ package study.project.backend.domain.paper.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import study.project.backend.domain.paper.request.PaperRequest;
 import study.project.backend.domain.paper.response.PaperResponse;
 import study.project.backend.domain.paper.service.PaperService;
@@ -25,5 +22,15 @@ public class PaperController {
             @RequestBody @Valid PaperRequest.Create request, @AuthenticationPrincipal Long userId
     ) {
         return CustomResponseEntity.success(paperService.createRollingPaper(request.toServiceRequest(), userId));
+    }
+
+    // 롤링페이퍼 선물하기 API
+    @PatchMapping("/gift")
+    public CustomResponseEntity<PaperResponse.Create> giftRollingPaper(
+            @RequestParam Long paperId,
+            @RequestParam Long giftedUserId,
+            @AuthenticationPrincipal Long userId
+    ) {
+        return CustomResponseEntity.success(paperService.giftRollingPaper(paperId, giftedUserId, userId));
     }
 }

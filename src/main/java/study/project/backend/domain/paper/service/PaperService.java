@@ -9,8 +9,6 @@ import study.project.backend.domain.paper.request.PaperServiceRequest;
 import study.project.backend.domain.paper.response.PaperResponse;
 import study.project.backend.domain.user.entity.Users;
 import study.project.backend.domain.user.repository.UserRepository;
-import study.project.backend.global.common.CustomResponseEntity;
-import study.project.backend.global.common.Result;
 import study.project.backend.global.common.exception.CustomException;
 
 import static study.project.backend.global.common.Result.*;
@@ -32,7 +30,22 @@ public class PaperService {
     }
 
 
+    public PaperResponse.Create giftRollingPaper(Long paperId, Long giftedUserId, Long userId) {
+        Paper paper = getMyPaperWithOne(paperId, userId);
+
+        Users giftedUser = getUser(giftedUserId);
+        paper.toGiftRollingPaper(giftedUser);
+
+        return PaperResponse.Create.response(paper);
+    }
+
     // method
+    private Paper getMyPaperWithOne(Long paperId, Long userId) {
+        return paperRepository.findByIdAndUserId(paperId, userId).orElseThrow(
+                () -> new CustomException(NOT_FOUND_PAPER)
+        );
+    }
+
     private static Paper toPaperEntity(PaperServiceRequest.Create request, Users user) {
         return Paper.builder()
                 .user(user)

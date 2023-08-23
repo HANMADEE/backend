@@ -40,4 +40,7 @@ public class Paper extends BaseEntity {
     @NotNull
     private Boolean isLikeOpen;
 
+    public void toGiftRollingPaper(Users user) {
+        this.user = user;
+    }
 }
