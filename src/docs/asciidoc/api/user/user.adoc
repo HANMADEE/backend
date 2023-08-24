@@ -34,3 +34,13 @@ include::{snippets}/updateNickName/request-fields.adoc[]
 ==== HTTP Response Body
 include::{snippets}/updateNickName/http-response.adoc[]
 include::{snippets}/updateNickName/response-fields.adoc[]
+
+=== 유저 검색 API
+
+==== HTTP Request Body
+include::{snippets}/searchUsers/http-request.adoc[]
+include::{snippets}/searchUsers/request-fields.adoc[]
+
+==== HTTP Response Body
+include::{snippets}/searchUsers/http-response.adoc[]
+include::{snippets}/searchUsers/response-fields.adoc[]
