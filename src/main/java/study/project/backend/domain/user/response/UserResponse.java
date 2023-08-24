@@ -5,19 +5,25 @@ import study.project.backend.domain.user.entity.Users;
 
 import java.util.Optional;
 
+import static lombok.AccessLevel.*;
+
 public class UserResponse {
 
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = PRIVATE)
     @NoArgsConstructor
     @Getter
     @Builder
     public static class OAuth {
         private String email;
         private String name;
-        private Optional<String> profileImageUrl;
+        private String profileImageUrl;
+
+        public Optional<String> getProfileImageUrl() {
+            return Optional.ofNullable(profileImageUrl);
+        }
     }
 
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = PRIVATE)
     @NoArgsConstructor
     @Getter
     @Builder
@@ -37,6 +43,26 @@ public class UserResponse {
                     .profileImageUrl(user.getProfileImageUrl())
                     .accessToken(accessToken)
                     .refreshToken(refreshToken)
+                    .build();
+        }
+    }
+
+    @AllArgsConstructor(access = PRIVATE)
+    @NoArgsConstructor
+    @Getter
+    @Builder
+    public static class Search {
+        private Long userId;
+        private String email;
+        private String nickName;
+        private String profileImageUrl;
+
+        public static Search response(Users user) {
+            return Search.builder()
+                    .userId(user.getId())
+                    .email(user.getEmail())
+                    .nickName(user.getNickName())
+                    .profileImageUrl(user.getProfileImageUrl())
                     .build();
         }
     }

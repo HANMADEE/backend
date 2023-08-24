@@ -10,6 +10,7 @@ public enum Result {
 
     // User
     NOT_FOUND_USER(-1000, "존재하지 않는 사용자"),
+    EMAIL_AND_NICKNAME_NOT_NULL_CONSTRAINT(-1001, "닉네임과 이메일 중 하나는 NULL이 아니어야 합니다."),
 
     // RollingPaper
     NOT_FOUND_PAPER(-2000, "존재하지 않는 롤링페이퍼");

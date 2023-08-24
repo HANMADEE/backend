@@ -32,4 +32,8 @@ public class Users {
 
     @NotNull
     private String profileImageUrl;
+
+    public void toUpdateNickname(String nickName) {
+        this.nickName = nickName;
+    }
 }

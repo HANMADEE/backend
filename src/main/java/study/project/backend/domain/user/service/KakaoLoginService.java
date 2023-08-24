@@ -41,7 +41,7 @@ public class KakaoLoginService implements OAuth2LoginService{
                 .email(profile.getKakaoAccount().getEmail())
                 .name(profile.getProperties().getNickname())
                 .profileImageUrl(
-                        Optional.ofNullable(profile.getKakaoAccount().getProfile().getProfileImageUrl())
+                        profile.getKakaoAccount().getProfile().getProfileImageUrl()
                 )
                 .build();
     }
