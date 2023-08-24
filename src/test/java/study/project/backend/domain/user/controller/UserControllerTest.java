@@ -1,5 +1,6 @@
 package study.project.backend.domain.user.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -35,13 +36,28 @@ class UserControllerTest extends ControllerTestSupport {
 
         // when // then
         mockMvc.perform(
-                MockMvcRequestBuilders.patch("/auth/signin")
-                        .header("Authorization","Bearer Token")
-                        .content(objectMapper.writeValueAsString(request))
-                        .contentType(APPLICATION_JSON)
-        )
+                        MockMvcRequestBuilders.patch("/auth/signin")
+                                .header("Authorization", "Bearer Token")
+                                .content(objectMapper.writeValueAsString(request))
+                                .contentType(APPLICATION_JSON)
+                )
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
+    @DisplayName("유저 검색 API")
+    @Test
+    void searchUsers() throws Exception {
+        // given
+        UserRequest.Search request = new UserRequest.Search(null, "hanmadee");
+
+        // when // then
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get("/auth/users")
+                                .content(objectMapper.writeValueAsString(request))
+                                .contentType(APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }

@@ -11,8 +11,11 @@ import study.project.backend.domain.user.entity.Users;
 import study.project.backend.domain.user.repository.UserRepository;
 import study.project.backend.domain.user.request.UserRequest;
 import study.project.backend.domain.user.request.UserServiceRequest;
+import study.project.backend.domain.user.response.UserResponse;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.*;
 import static study.project.backend.domain.user.entity.Authority.ROLE_USER;
 
 @SpringBootTest
@@ -47,15 +50,67 @@ class UserServiceTest {
         assertThat(validateUser.getNickName()).isEqualTo("두마디");
     }
 
+    @DisplayName("사용자가 닉네임, 또는 이메일로 서비스의 유저들을 검색한다.")
+    @Test
+    void searchUsers() {
+        // given
+        Users user1 = toUserEntity("한마디1", "hanmadee1@gmail.com");
+        Users user2 = toUserEntity("한마디2", "hanmxxxe2@gmail.com");
+        Users user3 = toUserEntity("두마디3", "hanmadee3@gmail.com");
+        Users user4 = toUserEntity("두마디4", "hanmxxxe4@gmail.com");
+        Users user5 = toUserEntity("한마디5", "hanmxxxe5@gmail.com");
+        Users user6 = toUserEntity("세마디6", "hanmadee6@gmail.com");
+        Users user7 = toUserEntity("한마디7", "hanmxxxe7@gmail.com");
+        Users user8 = toUserEntity("두마디8", "hanmadee8@gmail.com");
+
+        List<Users> users =
+                userRepository.saveAll(List.of(user1, user2, user3, user4, user5, user6, user7, user8));
+
+        UserRequest.Search request = new UserRequest.Search(null, "hanmxxxe");
+
+        // when
+        List<UserResponse.Search> response = userService.searchUsers(request.toServiceRequest());
+
+        // then
+        assertThat(response)
+                .extracting("userId", "email", "nickName")
+                .contains(
+                        tuple(users.get(1).getId(), users.get(1).getEmail(), users.get(1).getNickName()),
+                        tuple(users.get(3).getId(), users.get(3).getEmail(), users.get(3).getNickName()),
+                        tuple(users.get(4).getId(), users.get(4).getEmail(), users.get(4).getNickName()),
+                        tuple(users.get(6).getId(), users.get(6).getEmail(), users.get(6).getNickName())
+                );
+    }
+
+    @DisplayName("사용자가 닉네임, 또는 이메일로 서비스의 유저들을 검색한다.")
+    @Test
+    void searchUsersWithNotNickNameAndEmailIsNullThrowException() {
+        // given
+        UserRequest.Search request = new UserRequest.Search(null, null);
+
+        // when // then
+        assertThatThrownBy(() -> userService.searchUsers(request.toServiceRequest()))
+                .extracting("result.code", "result.message", "debug")
+                .contains(
+                        -1001,
+                        "닉네임과 이메일 중 하나는 NULL이 아니어야 합니다.",
+                        "닉네임과 이메일 중 하나는 NULL이 아니어야 합니다."
+                );
+    }
+
     public Users saveUser(String nickName, String email) {
         return userRepository.save(
-                Users.builder()
-                        .authority(ROLE_USER)
-                        .nickName(nickName)
-                        .email(email)
-                        .password("password")
-                        .profileImageUrl("default.png")
-                        .build()
+                toUserEntity(nickName, email)
         );
+    }
+
+    private static Users toUserEntity(String nickName, String email) {
+        return Users.builder()
+                .authority(ROLE_USER)
+                .nickName(nickName)
+                .email(email)
+                .password("password")
+                .profileImageUrl("default.png")
+                .build();
     }
 }
