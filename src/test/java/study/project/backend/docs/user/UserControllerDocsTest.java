@@ -7,6 +7,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import study.project.backend.docs.RestDocsSupport;
 import study.project.backend.domain.user.controller.Platform;
 import study.project.backend.domain.user.controller.UserController;
+import study.project.backend.domain.user.request.UserRequest;
 import study.project.backend.domain.user.response.UserResponse;
 import study.project.backend.domain.user.service.UserService;
 
@@ -14,13 +15,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
-import static org.springframework.restdocs.payload.JsonFieldType.STRING;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.payload.JsonFieldType.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.formParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -73,6 +74,37 @@ public class UserControllerDocsTest extends RestDocsSupport {
                                 fieldWithPath("data.profileImageUrl").type(STRING).description("유저 프로필 이미지"),
                                 fieldWithPath("data.accessToken").type(STRING).description("액세스 토큰"),
                                 fieldWithPath("data.refreshToken").type(STRING).description("리프레쉬 토큰")
+                        )
+                ));
+    }
+
+    @DisplayName("닉네임 수정 API")
+    @Test
+    void updateNickName() throws Exception {
+        // given
+        UserRequest.UpdateNickName request = new UserRequest.UpdateNickName("한마디");
+
+        // when // then
+        mockMvc.perform(
+                        MockMvcRequestBuilders.patch("/auth/signin")
+                                .header("Authorization", "Bearer Token")
+                                .content(objectMapper.writeValueAsString(request))
+                                .contentType(APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("updateNickName",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName("Authorization").description("Bearer Token")
+                        ),
+                        requestFields(
+                                fieldWithPath("nickName").type(STRING).description("유저 닉네임")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(NUMBER).description("상태 코드"),
+                                fieldWithPath("message").type(STRING).description("상태 메세지")
                         )
                 ));
     }
