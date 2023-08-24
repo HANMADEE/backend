@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import study.project.backend.domain.user.controller.Platform;
 import study.project.backend.domain.user.entity.Users;
 import study.project.backend.domain.user.repository.UserRepository;
+import study.project.backend.domain.user.request.UserServiceRequest;
 import study.project.backend.domain.user.response.UserResponse;
 import study.project.backend.global.common.exception.CustomException;
 import study.project.backend.global.config.jwt.TokenProvider;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import static study.project.backend.domain.user.entity.Authority.ROLE_USER;
 import static study.project.backend.global.common.Result.FAIL;
+import static study.project.backend.global.common.Result.NOT_FOUND_USER;
 
 @Service
 @RequiredArgsConstructor
@@ -57,6 +59,13 @@ public class UserService {
         return UserResponse.Login.response(user, accessToken, refreshToken);
     }
 
+    @Transactional
+    public Void updateNickName(UserServiceRequest.UpdateNickName request, Long userId) {
+        Users user = getUser(userId);
+        user.toUpdateNickname(request.getNickName());
+        return null;
+    }
+
     // method
 
     private UserResponse.OAuth toSocialLogin(String code, Platform platform) {
@@ -75,6 +84,12 @@ public class UserService {
         }
 
         return socialLoginUser;
+    }
+
+    private Users getUser(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new CustomException(NOT_FOUND_USER)
+        );
     }
 
     private Authentication getAuthentication(String email, String password) {
