@@ -2,9 +2,12 @@ package study.project.backend.domain.user.controller;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import study.project.backend.domain.ControllerTestSupport;
+import study.project.backend.domain.user.request.UserRequest;
 
+import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -20,6 +23,23 @@ class UserControllerTest extends ControllerTestSupport {
                                 .param("code", "JKWHNF2CA78acSW6AUw7cvxWsxzaAWVNKR34SAA0AZ")
                                 .param("platform", "KAKAO")
                 )
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("닉네임 수정 API")
+    @Test
+    void updateNickName() throws Exception {
+        // given
+        UserRequest.UpdateNickName request = new UserRequest.UpdateNickName("한마디");
+
+        // when // then
+        mockMvc.perform(
+                MockMvcRequestBuilders.patch("/auth/signin")
+                        .header("Authorization","Bearer Token")
+                        .content(objectMapper.writeValueAsString(request))
+                        .contentType(APPLICATION_JSON)
+        )
                 .andDo(print())
                 .andExpect(status().isOk());
     }
