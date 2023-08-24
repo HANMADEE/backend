@@ -12,4 +12,12 @@ public class UserServiceRequest {
     public static class UpdateNickName {
         private String nickName;
     }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class Search {
+        private String nickName;
+        private String email;
+    }
 }

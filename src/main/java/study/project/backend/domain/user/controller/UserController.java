@@ -9,6 +9,8 @@ import study.project.backend.domain.user.response.UserResponse;
 import study.project.backend.domain.user.service.UserService;
 import study.project.backend.global.common.CustomResponseEntity;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
@@ -30,5 +32,13 @@ public class UserController {
             @AuthenticationPrincipal Long userId
     ) {
         return CustomResponseEntity.success(userService.updateNickName(request.toServiceRequest(), userId));
+    }
+
+    // 유저 검색 API
+    @GetMapping("/users")
+    public CustomResponseEntity<List<UserResponse.Search>> searchUsers(
+            @RequestBody @Valid UserRequest.Search request
+    ) {
+        return CustomResponseEntity.success(userService.searchUsers(request.toServiceRequest()));
     }
 }

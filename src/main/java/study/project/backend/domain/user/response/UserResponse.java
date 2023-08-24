@@ -46,4 +46,24 @@ public class UserResponse {
                     .build();
         }
     }
+
+    @AllArgsConstructor(access = PRIVATE)
+    @NoArgsConstructor
+    @Getter
+    @Builder
+    public static class Search {
+        private Long userId;
+        private String email;
+        private String nickName;
+        private String profileImageUrl;
+
+        public static Search response(Users user) {
+            return Search.builder()
+                    .userId(user.getId())
+                    .email(user.getEmail())
+                    .nickName(user.getNickName())
+                    .profileImageUrl(user.getProfileImageUrl())
+                    .build();
+        }
+    }
 }

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import study.project.backend.domain.user.controller.Platform;
 import study.project.backend.domain.user.entity.Users;
 import study.project.backend.domain.user.repository.UserRepository;
+import study.project.backend.domain.user.request.UserRequest;
 import study.project.backend.domain.user.request.UserServiceRequest;
 import study.project.backend.domain.user.response.UserResponse;
 import study.project.backend.global.common.exception.CustomException;
@@ -19,8 +20,7 @@ import study.project.backend.global.config.jwt.TokenProvider;
 import java.util.List;
 
 import static study.project.backend.domain.user.entity.Authority.ROLE_USER;
-import static study.project.backend.global.common.Result.FAIL;
-import static study.project.backend.global.common.Result.NOT_FOUND_USER;
+import static study.project.backend.global.common.Result.*;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +33,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    // 소셜로그인 API
     @Transactional
     public UserResponse.Login socialLogin(String code, Platform platform) {
         // OAuth 로그인 진행
@@ -59,11 +60,24 @@ public class UserService {
         return UserResponse.Login.response(user, accessToken, refreshToken);
     }
 
+    // 닉네임 수정 API
     @Transactional
     public Void updateNickName(UserServiceRequest.UpdateNickName request, Long userId) {
         Users user = getUser(userId);
         user.toUpdateNickname(request.getNickName());
         return null;
+    }
+
+    // 유저 검색 API
+    public List<UserResponse.Search> searchUsers(UserServiceRequest.Search request) {
+        if (request.getEmail() == null && request.getNickName() == null) {
+            throw new CustomException(EMAIL_AND_NICKNAME_NOT_NULL_CONSTRAINT);
+        }
+
+        List<Users> users = userRepository.findAllByKeyword(request.getNickName(), request.getEmail());
+        return users.stream()
+                .map(UserResponse.Search::response)
+                .toList();
     }
 
     // method
@@ -99,4 +113,5 @@ public class UserService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return authentication;
     }
+
 }

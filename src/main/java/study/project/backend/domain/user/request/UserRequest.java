@@ -5,6 +5,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import study.project.backend.global.common.Result;
+import study.project.backend.global.common.exception.CustomException;
+
+import static study.project.backend.global.common.Result.*;
 
 public class UserRequest {
 
@@ -19,6 +23,21 @@ public class UserRequest {
         public UserServiceRequest.UpdateNickName toServiceRequest() {
             return UserServiceRequest.UpdateNickName.builder()
                     .nickName(nickName)
+                    .build();
+        }
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    public static class Search {
+        private String nickName;
+        private String email;
+
+        public UserServiceRequest.Search toServiceRequest() {
+            return UserServiceRequest.Search.builder()
+                    .nickName(nickName)
+                    .email(email)
                     .build();
         }
     }

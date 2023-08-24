@@ -54,7 +54,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/docs/*",
                                 "/version",
-                                "/auth/signin", "/login/kakao"
+                                "/auth/signin", "/auth/users", "/login/kakao", "/login/google"
                         )
                         .permitAll()
                 )
