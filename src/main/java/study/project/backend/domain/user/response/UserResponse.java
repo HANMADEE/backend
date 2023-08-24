@@ -5,19 +5,25 @@ import study.project.backend.domain.user.entity.Users;
 
 import java.util.Optional;
 
+import static lombok.AccessLevel.*;
+
 public class UserResponse {
 
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = PRIVATE)
     @NoArgsConstructor
     @Getter
     @Builder
     public static class OAuth {
         private String email;
         private String name;
-        private Optional<String> profileImageUrl;
+        private String profileImageUrl;
+
+        public Optional<String> getProfileImageUrl() {
+            return Optional.ofNullable(profileImageUrl);
+        }
     }
 
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @AllArgsConstructor(access = PRIVATE)
     @NoArgsConstructor
     @Getter
     @Builder
