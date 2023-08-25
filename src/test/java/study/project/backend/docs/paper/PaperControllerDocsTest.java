@@ -4,6 +4,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import study.project.backend.docs.RestDocsSupport;
 import study.project.backend.domain.paper.controller.PaperController;
@@ -17,6 +18,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -70,8 +72,6 @@ public class PaperControllerDocsTest extends RestDocsSupport {
                         resource(ResourceSnippetParameters.builder()
                                 .tag("Paper API")
                                 .summary("롤링페이퍼 만들기 API")
-                                .requestHeaders(
-                                        headerWithName("Authorization").description("Bearer Token"))
                                 .requestFields(
                                         fieldWithPath("subject").type(STRING).description("주제"),
                                         fieldWithPath("theme").type(STRING).description("테마").optional(),
@@ -86,6 +86,8 @@ public class PaperControllerDocsTest extends RestDocsSupport {
                                         fieldWithPath("data.theme").type(STRING).description("테마 이미지 URL"),
                                         fieldWithPath("data.isOpen").type(BOOLEAN).description("외부 공개 여부"),
                                         fieldWithPath("data.isLikeOpen").type(BOOLEAN).description("좋아요 공개 여부"))
+                                .requestHeaders(
+                                        headerWithName(AUTHORIZATION).description("Bearer Token"))
                                 .requestSchema(Schema.schema("PaperRequest.Create"))
                                 .responseSchema(Schema.schema("PaperResponse.Create"))
                                 .build())));
