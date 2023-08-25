@@ -1,9 +1,10 @@
 package study.project.backend.docs.user;
 
+import com.epages.restdocs.apispec.ResourceSnippetParameters;
+import com.epages.restdocs.apispec.Schema;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import study.project.backend.docs.RestDocsSupport;
 import study.project.backend.domain.user.controller.Platform;
 import study.project.backend.domain.user.controller.UserController;
@@ -14,19 +15,18 @@ import study.project.backend.domain.user.service.UserService;
 
 import java.util.List;
 
+import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
+import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.formParameters;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -40,7 +40,7 @@ public class UserControllerDocsTest extends RestDocsSupport {
         return new UserController(userService);
     }
 
-    @DisplayName("소셜로그인 API")
+    @DisplayName("소셜 로그인 API")
     @Test
     void socialLogin() throws Exception {
         // given
@@ -63,23 +63,25 @@ public class UserControllerDocsTest extends RestDocsSupport {
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("socialLogin",
-                        preprocessResponse(prettyPrint()),
-                        formParameters(
-                                parameterWithName("code").description("발급받은 인가코드"),
-                                parameterWithName("platform").description("플랫폼 : 'GOOGLE' / 'KAKAO' ")
-                        ),
-                        responseFields(
-                                fieldWithPath("code").type(NUMBER).description("상태 코드"),
-                                fieldWithPath("message").type(STRING).description("상태 메세지"),
-                                fieldWithPath("data.userId").type(NUMBER).description("유저 ID"),
-                                fieldWithPath("data.email").type(STRING).description("유저 이메일"),
-                                fieldWithPath("data.nickName").type(STRING).description("유저 닉네임"),
-                                fieldWithPath("data.profileImageUrl").type(STRING).description("유저 프로필 이미지"),
-                                fieldWithPath("data.accessToken").type(STRING).description("액세스 토큰"),
-                                fieldWithPath("data.refreshToken").type(STRING).description("리프레쉬 토큰")
-                        )
-                ));
+                .andDo(document("socialLogin", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
+                        resource(ResourceSnippetParameters.builder()
+                                .tag("User API")
+                                .summary("소셜 로그인 API")
+                                .formParameters(
+                                        parameterWithName("code").description("발급받은 인가코드"),
+                                        parameterWithName("platform").description("플랫폼 : 'GOOGLE' / 'KAKAO' "))
+                                .responseFields(
+                                        fieldWithPath("code").type(NUMBER).description("상태 코드"),
+                                        fieldWithPath("message").type(STRING).description("상태 메세지"),
+                                        fieldWithPath("data.userId").type(NUMBER).description("유저 ID"),
+                                        fieldWithPath("data.email").type(STRING).description("유저 이메일"),
+                                        fieldWithPath("data.nickName").type(STRING).description("유저 닉네임"),
+                                        fieldWithPath("data.profileImageUrl").type(STRING).description("유저 프로필 이미지"),
+                                        fieldWithPath("data.accessToken").type(STRING).description("액세스 토큰"),
+                                        fieldWithPath("data.refreshToken").type(STRING).description("리프레쉬 토큰"))
+                                .requestSchema(Schema.schema("FormParameter-socialLogin"))
+                                .responseSchema(Schema.schema("UserResponse.Login"))
+                                .build())));
     }
 
     @DisplayName("닉네임 수정 API")
@@ -93,24 +95,25 @@ public class UserControllerDocsTest extends RestDocsSupport {
                         RestDocumentationRequestBuilders.patch("/auth/signin")
                                 .header("Authorization", "Bearer Token")
                                 .content(objectMapper.writeValueAsString(request))
-                                .contentType(APPLICATION_JSON)
-                )
+                                .contentType(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andDo(document("updateNickName",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        requestHeaders(
-                                headerWithName("Authorization").description("Bearer Token")
-                        ),
-                        requestFields(
-                                fieldWithPath("nickName").type(STRING).description("유저 닉네임")
-                        ),
-                        responseFields(
-                                fieldWithPath("code").type(NUMBER).description("상태 코드"),
-                                fieldWithPath("message").type(STRING).description("상태 메세지")
-                        )
-                ));
+                        resource(ResourceSnippetParameters.builder()
+                                .tag("User API")
+                                .summary("닉네임 수정 API")
+                                .requestHeaders(
+                                        headerWithName("Authorization").description("Bearer Token"))
+                                .requestFields(
+                                        fieldWithPath("nickName").type(STRING).description("유저 닉네임"))
+                                .responseFields(
+                                        fieldWithPath("code").type(NUMBER).description("상태 코드"),
+                                        fieldWithPath("message").type(STRING).description("상태 메세지"))
+                                .requestSchema(Schema.schema("UserRequest.UpdateNickName"))
+                                .responseSchema(Schema.schema("Default Response"))
+                                .build())));
     }
 
     @DisplayName("유저 검색 API")
@@ -154,18 +157,22 @@ public class UserControllerDocsTest extends RestDocsSupport {
                 .andDo(document("searchUsers",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        requestFields(
-                                fieldWithPath("nickName").type(STRING).description("유저 닉네임").optional(),
-                                fieldWithPath("email").type(STRING).description("검색 이메일 / 아이디도 가능").optional()
-                        ),
-                        responseFields(
-                                fieldWithPath("code").type(NUMBER).description("상태 코드"),
-                                fieldWithPath("message").type(STRING).description("상태 메세지"),
-                                fieldWithPath("data[].userId").type(NUMBER).description("유저 ID"),
-                                fieldWithPath("data[].email").type(STRING).description("유저 이메일"),
-                                fieldWithPath("data[].nickName").type(STRING).description("유저 닉네임"),
-                                fieldWithPath("data[].profileImageUrl").type(STRING).description("유저 프로필 이미지")
-                        )
-                ));
+                        resource(ResourceSnippetParameters.builder()
+                                .tag("User API")
+                                .summary("유저 검색 API")
+                                .requestFields(
+                                        fieldWithPath("nickName").type(STRING).description("유저 닉네임").optional(),
+                                        fieldWithPath("email").type(STRING).description("검색 이메일 / 아이디도 가능").optional()
+                                )
+                                .responseFields(
+                                        fieldWithPath("code").type(NUMBER).description("상태 코드"),
+                                        fieldWithPath("message").type(STRING).description("상태 메세지"),
+                                        fieldWithPath("data[].userId").type(NUMBER).description("유저 ID"),
+                                        fieldWithPath("data[].email").type(STRING).description("유저 이메일"),
+                                        fieldWithPath("data[].nickName").type(STRING).description("유저 닉네임"),
+                                        fieldWithPath("data[].profileImageUrl").type(STRING).description("유저 프로필 이미지"))
+                                .requestSchema(Schema.schema("UserRequest.Search"))
+                                .responseSchema(Schema.schema("UserResponse.Search"))
+                                .build())));
     }
 }
