@@ -35,8 +35,8 @@ swaggerSources {
 
 openapi3 {
     servers = [
-            {url = "http://ec2-13-124-147-123.ap-northeast-2.compute.amazonaws.com"},
-            {url = "http://localhost:8080"}
+            { url = "http://ec2-13-124-147-123.ap-northeast-2.compute.amazonaws.com" },
+            { url = "http://localhost:8080" }
     ]
     title = "한마디 API 문서"
     description = "한마디 RestDocsWithSwagger Docs"
@@ -95,6 +95,20 @@ tasks.named('test') {
 
 tasks.withType(GenerateSwaggerUI) {
     dependsOn 'openapi3'
+    print("${openapi3.outputDirectory}")
+    doFirst {
+        def swaggerUIFile = file("${openapi3.outputDirectory}/openapi3.yaml")
+
+        def securitySchemesContent =  "  securitySchemes:\n" +  \
+                                      "    APIKey:\n" +  \
+                                      "      type: apiKey\n" +  \
+                                      "      name: Authorization\n" +  \
+                                      "      in: header\n" + \
+                                      "security:\n" +
+                                      "  - APIKey: []  # Apply the security scheme here"
+
+        swaggerUIFile.append securitySchemesContent
+    }
 }
 
 bootJar {
