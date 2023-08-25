@@ -1,15 +1,18 @@
 package study.project.backend.docs.paper;
 
+import com.epages.restdocs.apispec.ResourceSnippetParameters;
+import com.epages.restdocs.apispec.Schema;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import study.project.backend.docs.RestDocsSupport;
 import study.project.backend.domain.paper.controller.PaperController;
 import study.project.backend.domain.paper.request.PaperRequest;
 import study.project.backend.domain.paper.response.PaperResponse;
 import study.project.backend.domain.paper.service.PaperService;
 
+import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
+import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -17,7 +20,6 @@ import static org.mockito.Mockito.mock;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -65,26 +67,28 @@ public class PaperControllerDocsTest extends RestDocsSupport {
                 .andDo(document("createRollingPaper",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        requestHeaders(
-                                headerWithName("Authorization").description("Bearer Token")
-                        ),
-                        requestFields(
-                                fieldWithPath("subject").type(STRING).description("주제"),
-                                fieldWithPath("theme").type(STRING).description("테마").optional(),
-                                fieldWithPath("isOpen").type(BOOLEAN).description("외부 공개 여부"),
-                                fieldWithPath("isLikeOpen").type(BOOLEAN).description("좋아요 공개 여부")
-                        ),
-                        responseFields(
-                                fieldWithPath("code").type(NUMBER).description("상태 코드"),
-                                fieldWithPath("message").type(STRING).description("상태 메세지"),
-                                fieldWithPath("data.id").type(NUMBER).description("롤링페이퍼 ID"),
-                                fieldWithPath("data.userId").type(NUMBER).description("롤링페이퍼 소유자 ID"),
-                                fieldWithPath("data.subject").type(STRING).description("주제"),
-                                fieldWithPath("data.theme").type(STRING).description("테마 이미지 URL"),
-                                fieldWithPath("data.isOpen").type(BOOLEAN).description("외부 공개 여부"),
-                                fieldWithPath("data.isLikeOpen").type(BOOLEAN).description("좋아요 공개 여부")
-                        )
-                ));
+                        resource(ResourceSnippetParameters.builder()
+                                .tag("Paper API")
+                                .summary("롤링페이퍼 만들기 API")
+                                .requestHeaders(
+                                        headerWithName("Authorization").description("Bearer Token"))
+                                .requestFields(
+                                        fieldWithPath("subject").type(STRING).description("주제"),
+                                        fieldWithPath("theme").type(STRING).description("테마").optional(),
+                                        fieldWithPath("isOpen").type(BOOLEAN).description("외부 공개 여부"),
+                                        fieldWithPath("isLikeOpen").type(BOOLEAN).description("좋아요 공개 여부"))
+                                .responseFields(
+                                        fieldWithPath("code").type(NUMBER).description("상태 코드"),
+                                        fieldWithPath("message").type(STRING).description("상태 메세지"),
+                                        fieldWithPath("data.id").type(NUMBER).description("롤링페이퍼 ID"),
+                                        fieldWithPath("data.userId").type(NUMBER).description("롤링페이퍼 소유자 ID"),
+                                        fieldWithPath("data.subject").type(STRING).description("주제"),
+                                        fieldWithPath("data.theme").type(STRING).description("테마 이미지 URL"),
+                                        fieldWithPath("data.isOpen").type(BOOLEAN).description("외부 공개 여부"),
+                                        fieldWithPath("data.isLikeOpen").type(BOOLEAN).description("좋아요 공개 여부"))
+                                .requestSchema(Schema.schema("PaperRequest.Create"))
+                                .responseSchema(Schema.schema("PaperResponse.Create"))
+                                .build())));
     }
 
     @DisplayName("롤링페이퍼 선물하기 API")
@@ -114,23 +118,25 @@ public class PaperControllerDocsTest extends RestDocsSupport {
                 .andExpect(status().isOk())
                 .andDo(document("giftRollingPaper",
                         preprocessResponse(prettyPrint()),
-                        requestHeaders(
-                                headerWithName("Authorization").description("Bearer Token")
-                        ),
-                        formParameters(
-                                parameterWithName("paperId").description("롤링페이퍼 ID"),
-                                parameterWithName("giftedUserId").description("선물받을 유저 ID")
-                        ),
-                        responseFields(
-                                fieldWithPath("code").type(NUMBER).description("상태 코드"),
-                                fieldWithPath("message").type(STRING).description("상태 메세지"),
-                                fieldWithPath("data.id").type(NUMBER).description("롤링페이퍼 ID"),
-                                fieldWithPath("data.userId").type(NUMBER).description("롤링페이퍼 소유자 ID"),
-                                fieldWithPath("data.subject").type(STRING).description("주제"),
-                                fieldWithPath("data.theme").type(STRING).description("테마 이미지 URL"),
-                                fieldWithPath("data.isOpen").type(BOOLEAN).description("외부 공개 여부"),
-                                fieldWithPath("data.isLikeOpen").type(BOOLEAN).description("좋아요 공개 여부")
-                        )
-                ));
+                        resource(ResourceSnippetParameters.builder()
+                                .tag("Paper API")
+                                .summary("롤링페이퍼 선물하기 API")
+                                .requestHeaders(
+                                        headerWithName("Authorization").description("Bearer Token"))
+                                .formParameters(
+                                        parameterWithName("paperId").description("롤링페이퍼 ID"),
+                                        parameterWithName("giftedUserId").description("선물받을 유저 ID"))
+                                .responseFields(
+                                        fieldWithPath("code").type(NUMBER).description("상태 코드"),
+                                        fieldWithPath("message").type(STRING).description("상태 메세지"),
+                                        fieldWithPath("data.id").type(NUMBER).description("롤링페이퍼 ID"),
+                                        fieldWithPath("data.userId").type(NUMBER).description("롤링페이퍼 소유자 ID"),
+                                        fieldWithPath("data.subject").type(STRING).description("주제"),
+                                        fieldWithPath("data.theme").type(STRING).description("테마 이미지 URL"),
+                                        fieldWithPath("data.isOpen").type(BOOLEAN).description("외부 공개 여부"),
+                                        fieldWithPath("data.isLikeOpen").type(BOOLEAN).description("좋아요 공개 여부"))
+                                .requestSchema(Schema.schema("FormParameter-giftRollingPaper"))
+                                .responseSchema(Schema.schema("PaperResponse.Create"))
+                                .build())));
     }
 }
