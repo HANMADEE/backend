@@ -63,7 +63,9 @@ public class UserControllerDocsTest extends RestDocsSupport {
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("socialLogin", preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint()),
+                .andDo(document("socialLogin",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
                         resource(ResourceSnippetParameters.builder()
                                 .tag("User API")
                                 .summary("소셜 로그인 API")
