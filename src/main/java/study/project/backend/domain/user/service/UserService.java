@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import study.project.backend.domain.user.controller.Platform;
 import study.project.backend.domain.user.entity.Users;
 import study.project.backend.domain.user.repository.UserRepository;
-import study.project.backend.domain.user.request.UserRequest;
 import study.project.backend.domain.user.request.UserServiceRequest;
 import study.project.backend.domain.user.response.UserResponse;
 import study.project.backend.global.common.exception.CustomException;
@@ -80,6 +79,11 @@ public class UserService {
                 .toList();
     }
 
+    // 내 정보 조회 API
+    public UserResponse.Search readUser(Long userId) {
+        return UserResponse.Search.response(getUser(userId));
+    }
+
     // method
 
     private UserResponse.OAuth toSocialLogin(String code, Platform platform) {
@@ -113,5 +117,4 @@ public class UserService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return authentication;
     }
-
 }
