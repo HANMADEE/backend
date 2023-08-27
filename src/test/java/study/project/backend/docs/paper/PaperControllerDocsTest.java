@@ -4,7 +4,6 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpHeaders;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import study.project.backend.docs.RestDocsSupport;
 import study.project.backend.domain.paper.controller.PaperController;
@@ -21,11 +20,9 @@ import static org.mockito.Mockito.mock;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.JsonFieldType.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.formParameters;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -60,7 +57,7 @@ public class PaperControllerDocsTest extends RestDocsSupport {
         // when // then
         mockMvc.perform(
                         RestDocumentationRequestBuilders.post("/paper")
-                                .header("Authorization", "Bearer Token")
+                                .header(AUTHORIZATION, "Bearer {token}")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(APPLICATION_JSON)
                 )
@@ -72,6 +69,10 @@ public class PaperControllerDocsTest extends RestDocsSupport {
                         resource(ResourceSnippetParameters.builder()
                                 .tag("Paper API")
                                 .summary("롤링페이퍼 만들기 API")
+                                .requestHeaders(
+                                        headerWithName("Authorization")
+                                                .description("Swagger 요청시 해당 입력칸이 아닌 우측 상단 자물쇠 " +
+                                                        "또는 Authorize 버튼을 이용해 토큰을 넣어주세요"))
                                 .requestFields(
                                         fieldWithPath("subject").type(STRING).description("주제"),
                                         fieldWithPath("theme").type(STRING).description("테마").optional(),
@@ -86,8 +87,6 @@ public class PaperControllerDocsTest extends RestDocsSupport {
                                         fieldWithPath("data.theme").type(STRING).description("테마 이미지 URL"),
                                         fieldWithPath("data.isOpen").type(BOOLEAN).description("외부 공개 여부"),
                                         fieldWithPath("data.isLikeOpen").type(BOOLEAN).description("좋아요 공개 여부"))
-                                .requestHeaders(
-                                        headerWithName(AUTHORIZATION).description("Bearer Token"))
                                 .requestSchema(Schema.schema("PaperRequest.Create"))
                                 .responseSchema(Schema.schema("PaperResponse.Create"))
                                 .build())));
@@ -112,7 +111,7 @@ public class PaperControllerDocsTest extends RestDocsSupport {
         // when // then
         mockMvc.perform(
                         RestDocumentationRequestBuilders.patch("/paper/gift")
-                                .header("Authorization", "Bearer Token")
+                                .header(AUTHORIZATION, "Bearer {token}")
                                 .param("paperId", "1")
                                 .param("giftedUserId", "3")
                 )
@@ -124,7 +123,9 @@ public class PaperControllerDocsTest extends RestDocsSupport {
                                 .tag("Paper API")
                                 .summary("롤링페이퍼 선물하기 API")
                                 .requestHeaders(
-                                        headerWithName("Authorization").description("Bearer Token"))
+                                        headerWithName("Authorization")
+                                                .description("Swagger 요청시 해당 입력칸이 아닌 우측 상단 자물쇠 " +
+                                                        "또는 Authorize 버튼을 이용해 토큰을 넣어주세요"))
                                 .formParameters(
                                         parameterWithName("paperId").description("롤링페이퍼 ID"),
                                         parameterWithName("giftedUserId").description("선물받을 유저 ID"))

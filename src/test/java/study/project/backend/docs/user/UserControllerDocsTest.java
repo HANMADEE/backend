@@ -5,6 +5,7 @@ import com.epages.restdocs.apispec.Schema;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import study.project.backend.docs.RestDocsSupport;
 import study.project.backend.domain.user.controller.Platform;
 import study.project.backend.domain.user.controller.UserController;
@@ -21,6 +22,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -67,7 +69,7 @@ public class UserControllerDocsTest extends RestDocsSupport {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         resource(ResourceSnippetParameters.builder()
-                                .tag("User API")
+                                .tag("유저 API")
                                 .summary("소셜 로그인 API")
                                 .formParameters(
                                         parameterWithName("code").description("발급받은 인가코드"),
@@ -95,7 +97,7 @@ public class UserControllerDocsTest extends RestDocsSupport {
         // when // then
         mockMvc.perform(
                         RestDocumentationRequestBuilders.patch("/auth/signin")
-                                .header("Authorization", "Bearer Token")
+                                .header(AUTHORIZATION, "Bearer {token}")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(APPLICATION_JSON))
                 .andDo(print())
@@ -104,10 +106,12 @@ public class UserControllerDocsTest extends RestDocsSupport {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         resource(ResourceSnippetParameters.builder()
-                                .tag("User API")
+                                .tag("유저 API")
                                 .summary("닉네임 수정 API")
                                 .requestHeaders(
-                                        headerWithName("Authorization").description("Bearer Token"))
+                                        headerWithName("Authorization")
+                                                .description("Swagger 요청시 해당 입력칸이 아닌 우측 상단 자물쇠 " +
+                                                        "또는 Authorize 버튼을 이용해 토큰을 넣어주세요"))
                                 .requestFields(
                                         fieldWithPath("nickName").type(STRING).description("유저 닉네임"))
                                 .responseFields(
@@ -115,6 +119,42 @@ public class UserControllerDocsTest extends RestDocsSupport {
                                         fieldWithPath("message").type(STRING).description("상태 메세지"))
                                 .requestSchema(Schema.schema("UserRequest.UpdateNickName"))
                                 .responseSchema(Schema.schema("Default Response"))
+                                .build())));
+    }
+
+    @DisplayName("내 정보 조회 API")
+    @Test
+    void readUser() throws Exception {
+        // given
+        given(userService.readUser(any()))
+                .willReturn(UserResponse.Search.builder()
+                        .userId(1L)
+                        .email("hanmadee@gmail.com")
+                        .nickName("한마디")
+                        .profileImageUrl("https://example.s3.ap-northeast-2.amazonaws.com/image/default.png")
+                        .build());
+
+        // when // then
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/auth").header(AUTHORIZATION, "Bearer {token}"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("readUser",
+                        preprocessResponse(prettyPrint()),
+                        resource(ResourceSnippetParameters.builder()
+                                .tag("유저 API")
+                                .summary("내 정보 조회 API")
+                                .requestHeaders(
+                                        headerWithName("Authorization")
+                                                .description("Swagger 요청시 해당 입력칸이 아닌 우측 상단 자물쇠 " +
+                                                        "또는 Authorize 버튼을 이용해 토큰을 넣어주세요"))
+                                .responseFields(
+                                        fieldWithPath("code").type(NUMBER).description("상태 코드"),
+                                        fieldWithPath("message").type(STRING).description("상태 메세지"),
+                                        fieldWithPath("data.userId").type(NUMBER).description("유저 ID"),
+                                        fieldWithPath("data.email").type(STRING).description("유저 이메일"),
+                                        fieldWithPath("data.nickName").type(STRING).description("유저 닉네임"),
+                                        fieldWithPath("data.profileImageUrl").type(STRING).description("유저 프로필 이미지"))
+                                .responseSchema(Schema.schema("UserResponse.Search"))
                                 .build())));
     }
 
@@ -160,7 +200,7 @@ public class UserControllerDocsTest extends RestDocsSupport {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         resource(ResourceSnippetParameters.builder()
-                                .tag("User API")
+                                .tag("유저 API")
                                 .summary("유저 검색 API")
                                 .requestFields(
                                         fieldWithPath("nickName").type(STRING).description("유저 닉네임").optional(),
