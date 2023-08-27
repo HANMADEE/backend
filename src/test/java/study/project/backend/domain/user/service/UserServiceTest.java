@@ -98,6 +98,23 @@ class UserServiceTest {
                 );
     }
 
+    @DisplayName("유저가 자신의 프로필 정보를 조회한다.")
+    @Test
+    void readUser() {
+        // given
+        Users user = saveUser("한마디", "hanmadee@gmail.com");
+        em.flush();
+        em.clear();
+
+        // when
+        UserResponse.Search response = userService.readUser(user.getId());
+
+        // then
+        assertThat(response)
+                .extracting("userId", "email", "nickName")
+                .contains(user.getId(),"hanmadee@gmail.com","한마디");
+    }
+
     public Users saveUser(String nickName, String email) {
         return userRepository.save(
                 toUserEntity(nickName, email)

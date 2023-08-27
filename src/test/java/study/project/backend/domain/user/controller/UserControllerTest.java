@@ -8,6 +8,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import study.project.backend.domain.ControllerTestSupport;
 import study.project.backend.domain.user.request.UserRequest;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -56,6 +57,19 @@ class UserControllerTest extends ControllerTestSupport {
                         MockMvcRequestBuilders.get("/auth/users")
                                 .content(objectMapper.writeValueAsString(request))
                                 .contentType(APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("내 정보 조회 API")
+    @Test
+    void readUser() throws Exception {
+        // given
+        // when // then
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/auth")
+                        .header(AUTHORIZATION, "Bearer {token}")
                 )
                 .andDo(print())
                 .andExpect(status().isOk());
