@@ -41,4 +41,12 @@ public class UserController {
     ) {
         return CustomResponseEntity.success(userService.searchUsers(request.toServiceRequest()));
     }
+
+    // 내 정보 조회 API
+    @GetMapping("")
+    public CustomResponseEntity<UserResponse.Search> readUser(
+            @AuthenticationPrincipal Long userId
+    ) {
+        return CustomResponseEntity.success(userService.readUser(userId));
+    }
 }
