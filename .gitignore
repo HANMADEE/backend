@@ -206,3 +206,5 @@ src/main/resources/db/h2/data.sql
 bin/main/application.yml
 
 bin/test/application.yml
+
+src/main/resources/db/mysql/data.sql
