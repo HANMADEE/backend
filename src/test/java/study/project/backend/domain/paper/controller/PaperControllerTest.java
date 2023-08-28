@@ -2,6 +2,7 @@ package study.project.backend.domain.paper.controller;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import study.project.backend.domain.ControllerTestSupport;
 import study.project.backend.domain.paper.request.PaperRequest;
@@ -18,13 +19,13 @@ class PaperControllerTest extends ControllerTestSupport {
         // given
         PaperRequest.Create request = new PaperRequest.Create("생일", null, false, false);
 
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/paper")
+                .header("Authorization", "Bearer Token")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(APPLICATION_JSON);
+
         // when // then
-        mockMvc.perform(
-                        MockMvcRequestBuilders.post("/paper")
-                                .header("Authorization", "Bearer Token")
-                                .content(objectMapper.writeValueAsString(request))
-                                .contentType(APPLICATION_JSON)
-                )
+        mockMvc.perform(requestBuilder)
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -35,13 +36,13 @@ class PaperControllerTest extends ControllerTestSupport {
         // given
         PaperRequest.Create request = new PaperRequest.Create("생일", null, null, false);
 
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/paper")
+                .header("Authorization", "Bearer Token")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(APPLICATION_JSON);
+
         // when // then
-        mockMvc.perform(
-                        MockMvcRequestBuilders.post("/paper")
-                                .header("Authorization", "Bearer Token")
-                                .content(objectMapper.writeValueAsString(request))
-                                .contentType(APPLICATION_JSON)
-                )
+        mockMvc.perform(requestBuilder)
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
@@ -50,14 +51,28 @@ class PaperControllerTest extends ControllerTestSupport {
     @Test
     void giftRollingPaper() throws Exception {
         // given
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/paper/gift")
+                .header("Authorization", "Bearer Token")
+                .param("paperId", "1")
+                .param("giftedUserId", "3");
+
         // when // then
-        mockMvc.perform(
-                        MockMvcRequestBuilders.patch("/paper/gift")
-                                .header("Authorization", "Bearer Token")
-                                .param("paperId", "1")
-                                .param("giftedUserId", "3")
-                )
+        mockMvc.perform(requestBuilder)
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @DisplayName("롤링페이퍼 조회 API")
+    @Test
+    void readRollingPaper() throws Exception {
+        // given
+        MockHttpServletRequestBuilder httpRequest = MockMvcRequestBuilders.get("/paper")
+                .param("paperId", "1");
+
+        // when // then
+        mockMvc.perform(httpRequest)
+                .andDo(print())
+                .andExpect(status().isOk());
+
     }
 }
