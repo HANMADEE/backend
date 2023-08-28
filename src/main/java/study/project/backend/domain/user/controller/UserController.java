@@ -17,6 +17,14 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
+    // 회원가입 API
+    @PostMapping("/register")
+    public CustomResponseEntity<UserResponse.Register> register(
+            @RequestBody @Valid UserRequest.Register request
+    ) {
+        return CustomResponseEntity.success(userService.register(request.toServiceRequest()));
+    }
+
     // 소셜 로그인 API
     @PostMapping("/signin")
     public CustomResponseEntity<UserResponse.Login> socialLogin(
@@ -49,4 +57,5 @@ public class UserController {
     ) {
         return CustomResponseEntity.success(userService.readUser(userId));
     }
+
 }

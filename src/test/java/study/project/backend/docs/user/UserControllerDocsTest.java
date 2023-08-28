@@ -5,6 +5,7 @@ import com.epages.restdocs.apispec.Schema;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import study.project.backend.docs.RestDocsSupport;
 import study.project.backend.domain.user.controller.Platform;
@@ -28,7 +29,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -40,6 +41,55 @@ public class UserControllerDocsTest extends RestDocsSupport {
     @Override
     protected Object initController() {
         return new UserController(userService);
+    }
+
+    @DisplayName("회원가입 API")
+    @Test
+    void register() throws Exception {
+        // given
+        given(userService.register(any(UserServiceRequest.Register.class)))
+                .willReturn(UserResponse.Register.builder()
+                        .id(1L)
+                        .nickName("흥해라한마디")
+                        .email("1000test@naver.com")
+                        .profileImageUrl("https://example.s3.ap-northeast-2.amazonaws.com/image/default.png")
+                        .build()
+                );
+
+        UserRequest.Register request = new UserRequest.Register(
+                "흥해라한마디",
+                "1000test@naver.com",
+                "Abc12345!",
+                null
+        );
+
+        MockHttpServletRequestBuilder httpRequest = RestDocumentationRequestBuilders.post("/auth/register")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(APPLICATION_JSON);
+
+        // when // then
+        mockMvc.perform(httpRequest)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("register",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        resource(ResourceSnippetParameters.builder()
+                                .tag("유저 API")
+                                .summary("회원가입 API")
+                                .requestFields(
+                                        fieldWithPath("nickName").type(STRING).description("닉네임"),
+                                        fieldWithPath("email").type(STRING).description("이메일"),
+                                        fieldWithPath("password").type(STRING).description("비밀번호 : 대문자,소문자,특수문자 숫자 포함 & 8자 이상 20자 이하"),
+                                        fieldWithPath("profileImageUrl").type(STRING).description("optional : 프로필 이미지").optional())
+                                .responseFields(
+                                        fieldWithPath("code").type(NUMBER).description("상태 코드"),
+                                        fieldWithPath("message").type(STRING).description("상태 메세지"),
+                                        fieldWithPath("data.id").type(NUMBER).description("유저 ID"),
+                                        fieldWithPath("data.nickName").type(STRING).description("유저 닉네임"),
+                                        fieldWithPath("data.email").type(STRING).description("유저 이메일"),
+                                        fieldWithPath("data.profileImageUrl").type(STRING).description("유저 프로필 이미지"))
+                                .build())));
     }
 
     @DisplayName("소셜 로그인 API")
