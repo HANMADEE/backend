@@ -204,13 +204,13 @@ public class PaperControllerDocsTest extends RestDocsSupport {
                                 .build()
                 );
 
-        MockHttpServletRequestBuilder httpRequest = RestDocumentationRequestBuilders.get("/paper")
-                .param("paperId", "1");
+        MockHttpServletRequestBuilder httpRequest =
+                RestDocumentationRequestBuilders.get("/paper/{paperId}", 1L);
 
         ResourceSnippetParameters parameters = ResourceSnippetParameters.builder()
                 .tag("롤링페이퍼 API")
                 .summary("롤링페이퍼 조회 API")
-                .queryParameters(
+                .pathParameters(
                         parameterWithName("paperId").description("롤링페이퍼 ID"))
                 .responseFields(
                         fieldWithPath("code").type(NUMBER).description("상태 코드"),
