@@ -7,9 +7,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.project.backend.domain.BaseEntity;
+import study.project.backend.domain.comment.entity.Comment;
 import study.project.backend.domain.user.entity.Users;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
@@ -39,6 +42,10 @@ public class Paper extends BaseEntity {
     private Boolean isOpen;
     @NotNull
     private Boolean isLikeOpen;
+
+    @OneToMany(mappedBy = "paper", fetch = LAZY)
+    @Builder.Default
+    private List<Comment> comments = new ArrayList<>();
 
     public void toGiftRollingPaper(Users user) {
         this.user = user;

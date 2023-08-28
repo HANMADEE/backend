@@ -7,6 +7,6 @@ import study.project.backend.domain.paper.entity.Paper;
 import java.util.Optional;
 
 @Repository
-public interface PaperRepository extends JpaRepository<Paper, Long> {
+public interface PaperRepository extends JpaRepository<Paper, Long>, PaperCustomRepository {
     Optional<Paper> findByIdAndUserId(Long id, Long userId);
 }

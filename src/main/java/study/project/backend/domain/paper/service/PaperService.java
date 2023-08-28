@@ -11,7 +11,8 @@ import study.project.backend.domain.user.entity.Users;
 import study.project.backend.domain.user.repository.UserRepository;
 import study.project.backend.global.common.exception.CustomException;
 
-import static study.project.backend.global.common.Result.*;
+import static study.project.backend.global.common.Result.NOT_FOUND_PAPER;
+import static study.project.backend.global.common.Result.NOT_FOUND_USER;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +22,7 @@ public class PaperService {
     private final UserRepository userRepository;
     private final PaperRepository paperRepository;
 
+    // 롤링페이퍼 만들기 API
     @Transactional
     public PaperResponse.Create createRollingPaper(PaperServiceRequest.Create request, Long userId) {
         Users user = getUser(userId);
@@ -29,7 +31,8 @@ public class PaperService {
         return PaperResponse.Create.response(paper);
     }
 
-
+    // 롤링페이퍼 선물하기 API
+    @Transactional
     public PaperResponse.Create giftRollingPaper(Long paperId, Long giftedUserId, Long userId) {
         Paper paper = getMyPaperWithOne(paperId, userId);
 
@@ -39,7 +42,22 @@ public class PaperService {
         return PaperResponse.Create.response(paper);
     }
 
+    // 롤링페이퍼 조회 API
+    public PaperResponse.Read readRollingPaper(Long paperId) {
+        Paper paper = paperRepository.findByPaperWithFetchJoin(paperId).orElseThrow(
+                () -> new CustomException(NOT_FOUND_PAPER)
+        );
+
+        return PaperResponse.Read.response(paper);
+    }
+
     // method
+    private Paper getPaper(Long paperId) {
+        return paperRepository.findById(paperId).orElseThrow(
+                () -> new CustomException(NOT_FOUND_PAPER)
+        );
+    }
+
     private Paper getMyPaperWithOne(Long paperId, Long userId) {
         return paperRepository.findByIdAndUserId(paperId, userId).orElseThrow(
                 () -> new CustomException(NOT_FOUND_PAPER)

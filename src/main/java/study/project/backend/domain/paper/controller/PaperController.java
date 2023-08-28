@@ -33,4 +33,10 @@ public class PaperController {
     ) {
         return CustomResponseEntity.success(paperService.giftRollingPaper(paperId, giftedUserId, userId));
     }
+
+    // 롤링페이퍼 조회 API
+    @GetMapping("")
+    public CustomResponseEntity<PaperResponse.Read> readRollingPaper(@RequestParam Long paperId) {
+        return CustomResponseEntity.success(paperService.readRollingPaper(paperId));
+    }
 }
