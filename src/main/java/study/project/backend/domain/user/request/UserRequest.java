@@ -1,7 +1,6 @@
 package study.project.backend.domain.user.request;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,6 +37,37 @@ public class UserRequest {
             return UserServiceRequest.Search.builder()
                     .nickName(nickName)
                     .email(email)
+                    .build();
+        }
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    public static class Register {
+        @NotNull(message = "별명은 필수 값 입니다.")
+        private String nickName;
+
+        @NotNull(message = "이메일은 필수 값 입니다.")
+        @NotBlank(message = "이메일은 비어있을 수 없습니다.")
+        @Email(message = "이메일 형식이 아닙니다.")
+        private String email;
+
+        @NotNull(message = "비밀번호는 필수 값 입니다.")
+        @Pattern(
+                regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
+                message = "비밀번호는 대문자, 소문자, 특수문자, 숫자를 포함하고 있어야 합니다.")
+        @Size(min = 8, max = 20, message = "비밀번호는 최소 8자 이상, 최대 20자 이하여야 합니다.")
+        private String password;
+
+        private String profileImageUrl;
+
+        public UserServiceRequest.Register toServiceRequest() {
+            return UserServiceRequest.Register.builder()
+                    .nickName(nickName)
+                    .email(email)
+                    .password(password)
+                    .profileImageUrl(profileImageUrl)
                     .build();
         }
     }

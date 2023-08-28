@@ -1,6 +1,7 @@
 package study.project.backend.domain.user.response;
 
 import lombok.*;
+import study.project.backend.domain.user.entity.Authority;
 import study.project.backend.domain.user.entity.Users;
 
 import java.util.Optional;
@@ -62,6 +63,26 @@ public class UserResponse {
                     .userId(user.getId())
                     .email(user.getEmail())
                     .nickName(user.getNickName())
+                    .profileImageUrl(user.getProfileImageUrl())
+                    .build();
+        }
+    }
+
+    @AllArgsConstructor(access = PRIVATE)
+    @NoArgsConstructor
+    @Getter
+    @Builder
+    public static class Register {
+        private Long id;
+        private String nickName;
+        private String email;
+        private String profileImageUrl;
+
+        public static Register response(Users user) {
+            return Register.builder()
+                    .id(user.getId())
+                    .nickName(user.getNickName())
+                    .email(user.getEmail())
                     .profileImageUrl(user.getProfileImageUrl())
                     .build();
         }

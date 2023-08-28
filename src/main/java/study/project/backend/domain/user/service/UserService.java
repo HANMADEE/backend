@@ -32,6 +32,20 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    // 회원가입 API
+    @Transactional
+    public UserResponse.Register register(UserServiceRequest.Register request) {
+        Users user = userRepository.save(Users.builder()
+                .authority(ROLE_USER)
+                .nickName(request.getNickName())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .profileImageUrl(request.getProfileImageUrl().orElse("default.png"))
+                .build());
+
+        return UserResponse.Register.response(user);
+    }
+
     // 소셜로그인 API
     @Transactional
     public UserResponse.Login socialLogin(String code, Platform platform) {
