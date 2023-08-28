@@ -80,9 +80,13 @@ public class PaperResponse {
         private String kind;
 
         public static PaperResponse.Comments toEntity(Comment comment) {
+            String userName = Optional.ofNullable(comment.getUser())
+                    .map(Users::getNickName)
+                    .orElse("익명");
+
             return Comments.builder()
                     .id(comment.getId())
-                    .userName(comment.getUser().getNickName())
+                    .userName(userName)
                     .content(comment.getContent())
                     .imageUrl(comment.getImageUrl())
                     .font(comment.getFont())

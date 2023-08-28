@@ -123,6 +123,39 @@ class PaperServiceTest {
                 );
     }
 
+    @DisplayName("유저가 자신의 롤링페이퍼를 조회할때 익명의 사용자도 포함되어있다.")
+    @Test
+    void readRollingPaperWithAnonymous() {
+        // given
+        Users user = saveUser("한마디", "hanmadee@gmail.com");
+        Users user1 = saveUser("두마디", "twomadee@gmail.com");
+
+        Paper paper = savePaper(user);
+
+        Comment comment1 = saveComment(user1, paper, "생일 축하해 한마디야!");
+        Comment comment2 = saveComment(null, paper, "생일 축하해 선물은 나야!");
+        Comment comment3 = saveComment(null, paper, "생일 축하해 근데 나 배고파");
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        PaperResponse.Read response = paperService.readRollingPaper(paper.getId());
+
+        // then
+        assertThat(response)
+                .extracting("id", "userId", "subject", "theme", "isOpen", "isLikeOpen")
+                .contains(paper.getId(), user.getId(), "생일", "default.png", false, false);
+
+        assertThat(response.getComments())
+                .extracting("id", "userName", "content", "imageUrl", "font", "sort", "backgroundColor", "kind")
+                .contains(
+                        tuple(comment1.getId(), "두마디", "생일 축하해 한마디야!", null, "godic", "center", "white", "친구"),
+                        tuple(comment2.getId(), "익명", "생일 축하해 선물은 나야!", null, "godic", "center", "white", "친구"),
+                        tuple(comment3.getId(), "익명", "생일 축하해 근데 나 배고파", null, "godic", "center", "white", "친구")
+                );
+    }
+
     public Users saveUser(String nickName, String email) {
         return userRepository.save(
                 Users.builder()
