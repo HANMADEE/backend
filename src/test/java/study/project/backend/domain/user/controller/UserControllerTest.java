@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import study.project.backend.domain.ControllerTestSupport;
 import study.project.backend.domain.user.request.UserRequest;
@@ -73,5 +75,89 @@ class UserControllerTest extends ControllerTestSupport {
                 )
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @DisplayName("회원가입 API")
+    @Test
+    void register() throws Exception {
+        // given
+        UserRequest.Register request = new UserRequest.Register(
+                "흥해라한마디",
+                "1000test@naver.com",
+                "Abc12345!",
+                null
+        );
+
+        MockHttpServletRequestBuilder httpRequest = MockMvcRequestBuilders.post("/auth/register")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(APPLICATION_JSON);
+
+        // when // then
+        mockMvc.perform(httpRequest)
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("회원가입 API - 비밀번호 형식 실패")
+    @Test
+    void registerWithNotPatternPasswordThrowException() throws Exception {
+        // given
+        UserRequest.Register request = new UserRequest.Register(
+                "흥해라한마디",
+                "1000test@naver.com",
+                "abc12345",
+                null
+        );
+
+        MockHttpServletRequestBuilder httpRequest = MockMvcRequestBuilders.post("/auth/register")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(APPLICATION_JSON);
+
+        // when // then
+        mockMvc.perform(httpRequest)
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @DisplayName("회원가입 API - 이메일 형식 실패")
+    @Test
+    void registerWithNotPatternEmailThrowException() throws Exception {
+        // given
+        UserRequest.Register request = new UserRequest.Register(
+                "흥해라한마디",
+                "1000test-naver.com",
+                "Abc12345!",
+                null
+        );
+
+        MockHttpServletRequestBuilder httpRequest = MockMvcRequestBuilders.post("/auth/register")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(APPLICATION_JSON);
+
+        // when // then
+        mockMvc.perform(httpRequest)
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @DisplayName("회원가입 API - 비밀번호 사이즈 실패")
+    @Test
+    void registerWithNotSizePasswordThrowException() throws Exception {
+        // given
+        UserRequest.Register request = new UserRequest.Register(
+                "흥해라한마디",
+                "1000test@naver.com",
+                "abc1234",
+                null
+        );
+
+        MockHttpServletRequestBuilder httpRequest = MockMvcRequestBuilders.post("/auth/register")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(APPLICATION_JSON);
+
+        // when // then
+        mockMvc.perform(httpRequest)
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 }

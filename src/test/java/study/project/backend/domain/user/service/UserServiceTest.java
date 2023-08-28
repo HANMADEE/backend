@@ -32,6 +32,26 @@ class UserServiceTest {
     @Autowired
     private UserService userService;
 
+    @DisplayName("유저가 서비스의 회원가입을 진행한다.")
+    @Test
+    void register() {
+        // given
+        UserRequest.Register request = new UserRequest.Register(
+                "흥해라한마디",
+                "1000test@naver.com",
+                "Abc12345!",
+                null
+        );
+
+        // when
+        UserResponse.Register response = userService.register(request.toServiceRequest());
+
+        // then
+        assertThat(response)
+                .extracting("nickName", "email", "profileImageUrl")
+                .contains("흥해라한마디", "1000test@naver.com", "default.png");
+    }
+
     @DisplayName("유저가 자신의 닉네임을 수정한다.")
     @Test
     void updateNickName() {
@@ -112,7 +132,7 @@ class UserServiceTest {
         // then
         assertThat(response)
                 .extracting("userId", "email", "nickName")
-                .contains(user.getId(),"hanmadee@gmail.com","한마디");
+                .contains(user.getId(), "hanmadee@gmail.com", "한마디");
     }
 
     public Users saveUser(String nickName, String email) {
