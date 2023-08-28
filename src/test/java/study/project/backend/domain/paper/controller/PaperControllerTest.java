@@ -66,8 +66,7 @@ class PaperControllerTest extends ControllerTestSupport {
     @Test
     void readRollingPaper() throws Exception {
         // given
-        MockHttpServletRequestBuilder httpRequest = MockMvcRequestBuilders.get("/paper")
-                .param("paperId", "1");
+        MockHttpServletRequestBuilder httpRequest = MockMvcRequestBuilders.get("/paper/{paperId}", 1L);
 
         // when // then
         mockMvc.perform(httpRequest)
