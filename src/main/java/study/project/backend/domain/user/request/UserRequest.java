@@ -90,4 +90,25 @@ public class UserRequest {
                     .build();
         }
     }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    public static class Update {
+
+        @NotNull(message = "별명은 필수 값 입니다.")
+        private String nickName;
+
+        @NotNull(message = "이메일은 필수 값 입니다.")
+        @NotBlank(message = "이메일은 비어있을 수 없습니다.")
+        @Email(message = "이메일 형식이 아닙니다.")
+        private String email;
+
+        public UserServiceRequest.Update toServiceRequest() {
+            return UserServiceRequest.Update.builder()
+                    .nickName(nickName)
+                    .email(email)
+                    .build();
+        }
+    }
 }

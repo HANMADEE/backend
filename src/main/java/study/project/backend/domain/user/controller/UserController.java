@@ -28,7 +28,7 @@ public class UserController {
     // 로그인 API
     @PostMapping("/login")
     public CustomResponseEntity<UserResponse.Login> login(
-        @RequestBody @Valid UserRequest.Login request
+            @RequestBody @Valid UserRequest.Login request
     ) {
         return CustomResponseEntity.success(userService.login(request.toServiceRequest()));
     }
@@ -64,6 +64,15 @@ public class UserController {
             @AuthenticationPrincipal Long userId
     ) {
         return CustomResponseEntity.success(userService.readUser(userId));
+    }
+
+    // 내 정보 수정 API
+    @PatchMapping("")
+    public CustomResponseEntity<Void> updateUser(
+            @AuthenticationPrincipal Long userId,
+            @RequestBody @Valid UserRequest.Update request
+    ) {
+        return CustomResponseEntity.success(userService.updateUser(userId, request.toServiceRequest()));
     }
 
 }

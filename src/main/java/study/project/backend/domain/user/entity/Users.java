@@ -36,4 +36,9 @@ public class Users {
     public void toUpdateNickname(String nickName) {
         this.nickName = nickName;
     }
+
+    public void toUpdate(String nickName, String email) {
+        this.nickName = nickName;
+        this.email = email;
+    }
 }

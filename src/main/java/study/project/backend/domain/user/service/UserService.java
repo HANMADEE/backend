@@ -112,6 +112,14 @@ public class UserService {
         return UserResponse.Search.response(getUser(userId));
     }
 
+    // 내 정보 수정 API
+    public Void updateUser(Long userId, UserServiceRequest.Update request) {
+        Users user = getUser(userId);
+        user.toUpdate(request.getNickName(), request.getEmail());
+
+        return null;
+    }
+
     // method
 
     private UserResponse.OAuth toSocialLogin(String code, Platform platform) {
@@ -163,4 +171,5 @@ public class UserService {
             throw new CustomException(NOT_MATCHED_PASSWORD);
         }
     }
+
 }

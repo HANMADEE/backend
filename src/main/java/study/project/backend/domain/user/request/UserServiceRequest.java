@@ -13,6 +13,15 @@ public class UserServiceRequest {
     @NoArgsConstructor
     @Getter
     @Builder
+    public static class Update {
+        private String nickName;
+        private String email;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Builder
     public static class Login {
         private String email;
         private String password;
