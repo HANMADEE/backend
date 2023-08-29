@@ -1,5 +1,6 @@
 package study.project.backend.domain.comment.service;
 
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,11 @@ import study.project.backend.domain.paper.entity.Paper;
 import study.project.backend.domain.user.entity.Users;
 import study.project.backend.domain.user.repository.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 import static study.project.backend.domain.user.entity.Authority.ROLE_USER;
 
 @SpringBootTest
@@ -36,6 +39,9 @@ class CommentServiceTest {
 
     @Autowired
     private PaperRepository paperRepository;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @DisplayName("익명의 사용자가 롤링페이퍼에 코멘트를 남긴다.")
     @Test
@@ -92,6 +98,37 @@ class CommentServiceTest {
                         "center", "white", "친구");
     }
 
+    @DisplayName("유저가 자신이 남긴 한마디들을 조회한다.")
+    @Test
+    void readMyComment() {
+        // given
+        Users user = saveUser("한마딩", "1000test@naver.com");
+
+        Users user1 = saveUser("두마딩", "1000testing@naver.com");
+
+        Paper paper = savePaper(user);
+
+        saveComment(user1, paper, "무엇을 적을까요1");
+        saveComment(user1, paper, "무엇을 적을까요2");
+        saveComment(user1, paper, "무엇을 적을까요3");
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        List<CommentResponse.Read> response = commentService.readMyComment(user1.getId());
+
+        // then
+        assertThat(response)
+                .extracting("paperUserName","content")
+                .contains(
+                        tuple("한마딩","무엇을 적을까요1"),
+                        tuple("한마딩","무엇을 적을까요2"),
+                        tuple("한마딩","무엇을 적을까요3")
+                );
+
+    }
+
     public Users saveUser(String nickName, String email) {
         return userRepository.save(
                 Users.builder()
@@ -104,9 +141,9 @@ class CommentServiceTest {
         );
     }
 
-    private Comment saveComment(Users user1, Paper paper, String content) {
+    private Comment saveComment(Users user, Paper paper, String content) {
         return commentRepository.save(Comment.builder()
-                .user(user1)
+                .user(user)
                 .paper(paper)
                 .content(content)
                 .font("godic")
