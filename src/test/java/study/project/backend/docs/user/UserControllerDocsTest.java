@@ -267,4 +267,53 @@ public class UserControllerDocsTest extends RestDocsSupport {
                                 .responseSchema(Schema.schema("UserResponse.Search"))
                                 .build())));
     }
+
+    @DisplayName("로그인 API")
+    @Test
+    void login() throws Exception {
+        // given
+        UserRequest.Login request = new UserRequest.Login("1000test@naver.com","Abc12345!");
+
+        given(userService.login(any()))
+                .willReturn(
+                        UserResponse.Login.builder()
+                                .userId(1L)
+                                .email("1000test@naver.com")
+                                .nickName("야채쿵야")
+                                .profileImageUrl("https://example.s3.ap-northeast-2.amazonaws.com/image/default.png")
+                                .accessToken("access token")
+                                .refreshToken("refresh token")
+                                .build()
+                );
+
+        MockHttpServletRequestBuilder httpRequest = RestDocumentationRequestBuilders.post("/auth/login")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(APPLICATION_JSON);
+
+        // when // then
+        mockMvc.perform(httpRequest)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("login",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        resource(ResourceSnippetParameters.builder()
+                                .tag("유저 API")
+                                .summary("로그인 API")
+                                .requestFields(
+                                        fieldWithPath("email").type(STRING).description("이메일"),
+                                        fieldWithPath("password").type(STRING).description("비밀번호"))
+                                .responseFields(
+                                        fieldWithPath("code").type(NUMBER).description("상태 코드"),
+                                        fieldWithPath("message").type(STRING).description("상태 메세지"),
+                                        fieldWithPath("data.userId").type(NUMBER).description("유저 ID"),
+                                        fieldWithPath("data.email").type(STRING).description("유저 이메일"),
+                                        fieldWithPath("data.nickName").type(STRING).description("유저 닉네임"),
+                                        fieldWithPath("data.profileImageUrl").type(STRING).description("유저 프로필 사진"),
+                                        fieldWithPath("data.accessToken").type(STRING).description("발급된 액세스 토큰"),
+                                        fieldWithPath("data.refreshToken").type(STRING).description("발급된 리프레쉬 토큰"))
+                                .requestSchema(Schema.schema("UserRequest.Login"))
+                                .responseSchema(Schema.schema("UserResponse.Login"))
+                                .build())));
+    }
 }
