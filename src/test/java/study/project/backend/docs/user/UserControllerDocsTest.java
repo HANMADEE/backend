@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import study.project.backend.docs.RestDocsSupport;
 import study.project.backend.domain.user.controller.Platform;
 import study.project.backend.domain.user.controller.UserController;
@@ -313,6 +314,38 @@ public class UserControllerDocsTest extends RestDocsSupport {
                                         fieldWithPath("data.refreshToken").type(STRING).description("발급된 리프레쉬 토큰"))
                                 .requestSchema(Schema.schema("UserRequest.Login"))
                                 .responseSchema(Schema.schema("UserResponse.Login"))
+                                .build())));
+    }
+
+    @DisplayName("내 정보 수정 API")
+    @Test
+    void updateUser() throws Exception {
+        // given
+        UserRequest.Update request = new UserRequest.Update("한마디", "1000test@naver.com");
+
+        MockHttpServletRequestBuilder httpRequest = RestDocumentationRequestBuilders.patch("/auth")
+                .header(AUTHORIZATION, "Bearer {token}")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(APPLICATION_JSON);
+
+        // when // then
+        mockMvc.perform(httpRequest)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("updateUser",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        resource(ResourceSnippetParameters.builder()
+                                .tag("유저 API")
+                                .summary("내 정보 수정 API")
+                                .requestFields(
+                                        fieldWithPath("email").type(STRING).description("변경할 이메일"),
+                                        fieldWithPath("nickName").type(STRING).description("변경할 닉네임"))
+                                .responseFields(
+                                        fieldWithPath("code").type(NUMBER).description("상태 코드"),
+                                        fieldWithPath("message").type(STRING).description("상태 메세지"))
+                                .requestSchema(Schema.schema("UserRequest.Update"))
+                                .responseSchema(Schema.schema("UserResponse.Update"))
                                 .build())));
     }
 }
