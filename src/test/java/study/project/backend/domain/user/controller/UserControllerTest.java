@@ -3,6 +3,7 @@ package study.project.backend.domain.user.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -165,7 +166,7 @@ class UserControllerTest extends ControllerTestSupport {
     @Test
     void login() throws Exception {
         // given
-        UserRequest.Login request = new UserRequest.Login("1000test@naver.com","Abc12345!");
+        UserRequest.Login request = new UserRequest.Login("1000test@naver.com", "Abc12345!");
 
         MockHttpServletRequestBuilder httpRequest = MockMvcRequestBuilders.post("/auth/login")
                 .content(objectMapper.writeValueAsString(request))
@@ -173,6 +174,23 @@ class UserControllerTest extends ControllerTestSupport {
 
         // when // then
 
+        mockMvc.perform(httpRequest)
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("내 정보 수정 API")
+    @Test
+    void updateUser() throws Exception {
+        // given
+        UserRequest.Update request = new UserRequest.Update("한마디", "1000test@naver.com");
+
+        MockHttpServletRequestBuilder httpRequest = MockMvcRequestBuilders.patch("/auth")
+                .header(AUTHORIZATION, "Bearer {token}")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(APPLICATION_JSON);
+
+        // when // then
         mockMvc.perform(httpRequest)
                 .andDo(print())
                 .andExpect(status().isOk());

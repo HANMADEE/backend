@@ -183,6 +183,26 @@ class UserServiceTest {
                 .contains(user.getId(), "hanmadee@gmail.com", "한마디");
     }
 
+    @DisplayName("유저가 자신의 프로필을 수정한다.")
+    @Test
+    void updateUser() {
+        // given
+        Users user = saveUser("한마디", "hanmadee@gmail.com");
+        UserRequest.Update request = new UserRequest.Update("두마디", "hanmadee2@gmail.com");
+
+        em.flush();
+        em.clear();
+
+        // when
+        userService.updateUser(user.getId(), request.toServiceRequest());
+
+        // then
+        Users validateUser = userRepository.findById(user.getId()).get();
+        assertThat(validateUser)
+                .extracting("email", "nickName")
+                .contains("hanmadee2@gmail.com", "두마디");
+    }
+
     public Users saveUser(String nickName, String email) {
         return userRepository.save(
                 toUserEntity(nickName, email)
