@@ -70,8 +70,8 @@ class UserControllerTest extends ControllerTestSupport {
         // given
         // when // then
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/auth")
-                        .header(AUTHORIZATION, "Bearer {token}")
+                        MockMvcRequestBuilders.get("/auth")
+                                .header(AUTHORIZATION, "Bearer {token}")
                 )
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -159,5 +159,22 @@ class UserControllerTest extends ControllerTestSupport {
         mockMvc.perform(httpRequest)
                 .andDo(print())
                 .andExpect(status().isBadRequest());
+    }
+
+    @DisplayName("로그인 API")
+    @Test
+    void login() throws Exception {
+        // given
+        UserRequest.Login request = new UserRequest.Login("1000test@naver.com","Abc12345!");
+
+        MockHttpServletRequestBuilder httpRequest = MockMvcRequestBuilders.post("/auth/login")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(APPLICATION_JSON);
+
+        // when // then
+
+        mockMvc.perform(httpRequest)
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }
