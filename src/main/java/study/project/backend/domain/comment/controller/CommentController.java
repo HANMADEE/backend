@@ -8,17 +8,17 @@ import study.project.backend.domain.comment.response.CommentResponse;
 import study.project.backend.domain.comment.service.CommentService;
 import study.project.backend.global.common.CustomResponseEntity;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/paper")
 public class CommentController {
 
     private final CommentService commentService;
 
     // 한마디 작성 API
-    @PostMapping("/{paperId}/comment")
+    @PostMapping("/paper/{paperId}/comment")
     public CustomResponseEntity<CommentResponse.Create> createComment(
             @PathVariable Long paperId,
             @RequestBody CommentRequest.Create request,
@@ -27,5 +27,13 @@ public class CommentController {
         return CustomResponseEntity.success(
                 commentService.createComment(paperId, request.toServiceRequest(), Optional.ofNullable(userId))
         );
+    }
+
+    // 내 한마디 조회 API
+    @GetMapping("/comment")
+    public CustomResponseEntity<List<CommentResponse.Read>> readMyComment(
+            @AuthenticationPrincipal Long userId
+    ) {
+        return CustomResponseEntity.success(commentService.readMyComment(userId));
     }
 }

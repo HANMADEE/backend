@@ -49,4 +49,34 @@ public class CommentResponse {
                     .build();
         }
     }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Builder
+    public static class Read {
+        private Long id;
+        private Long paperId;
+        private String paperUserName;
+        private String content;
+        private String imageUrl;
+        private String font;
+        private String sort;
+        private String backgroundColor;
+        private String kind;
+
+        public static Read response(Comment comment) {
+            return Read.builder()
+                    .id(comment.getId())
+                    .paperId(comment.getPaper().getId())
+                    .paperUserName(comment.getPaper().getUser().getNickName())
+                    .content(comment.getContent())
+                    .imageUrl(comment.getImageUrl())
+                    .font(comment.getFont())
+                    .sort(comment.getSort())
+                    .backgroundColor(comment.getBackgroundColor())
+                    .kind(comment.getKind())
+                    .build();
+        }
+    }
 }

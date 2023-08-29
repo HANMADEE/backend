@@ -12,6 +12,7 @@ import study.project.backend.domain.user.entity.Users;
 import study.project.backend.domain.user.repository.UserRepository;
 import study.project.backend.global.common.exception.CustomException;
 
+import java.util.List;
 import java.util.Optional;
 
 import static study.project.backend.global.common.Result.NOT_FOUND_PAPER;
@@ -25,6 +26,7 @@ public class CommentService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
 
+    // 한마디 작성 API
     public CommentResponse.Create createComment(Long paperId, CommentServiceRequest.Create request, Optional<Long> userId) {
         Users user = userId.map(this::getUser).orElse(null);
         Paper paper = getPaper(paperId);
@@ -41,6 +43,14 @@ public class CommentService {
                 .build());
 
         return CommentResponse.Create.response(saveComment);
+    }
+
+    // 내 한마디 조회 API
+    public List<CommentResponse.Read> readMyComment(Long userId) {
+        List<Comment> comments = commentRepository.findAllByUserWithFetch(userId);
+        return comments.stream()
+                .map(CommentResponse.Read::response)
+                .toList();
     }
 
     private Paper getPaper(Long paperId) {

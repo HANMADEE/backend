@@ -4,13 +4,12 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import study.project.backend.domain.paper.entity.Paper;
-import study.project.backend.domain.user.entity.QUsers;
 
 import java.util.Optional;
 
 import static study.project.backend.domain.comment.entity.QComment.comment;
 import static study.project.backend.domain.paper.entity.QPaper.paper;
-import static study.project.backend.domain.user.entity.QUsers.*;
+import static study.project.backend.domain.user.entity.QUsers.users;
 
 @Repository
 @RequiredArgsConstructor
