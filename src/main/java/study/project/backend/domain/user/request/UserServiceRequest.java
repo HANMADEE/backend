@@ -3,10 +3,20 @@ package study.project.backend.domain.user.request;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Optional;
 
 public class UserServiceRequest {
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Builder
+    public static class Login {
+        private String email;
+        private String password;
+    }
 
     @AllArgsConstructor
     @Getter

@@ -46,6 +46,20 @@ public class UserService {
         return UserResponse.Register.response(user);
     }
 
+    // 로그인 API
+    public UserResponse.Login login(UserServiceRequest.Login request) {
+        Users user = getUser(request.getEmail());
+        validatePassword(request, user);
+
+        // 토큰 발급
+        String accessToken = tokenProvider.createToken(
+                user.getId(), getAuthentication(request.getEmail(), request.getPassword())
+        );
+        String refreshToken = tokenProvider.createRefreshToken(user.getEmail());
+
+        return UserResponse.Login.response(user, accessToken, refreshToken);
+    }
+
     // 소셜로그인 API
     @Transactional
     public UserResponse.Login socialLogin(String code, Platform platform) {
@@ -124,11 +138,29 @@ public class UserService {
         );
     }
 
+    private Users getUser(String email) {
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> new CustomException(NOT_FOUND_USER)
+        );
+    }
+
     private Authentication getAuthentication(String email, String password) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(email, password);
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return authentication;
+    }
+
+    private void validatePassword(UserServiceRequest.Login request, Users user) {
+        String enteredPassword = request.getPassword();
+
+        if (enteredPassword.equals("kakao") || enteredPassword.equals("KAKAO") || enteredPassword.equals("google") || enteredPassword.equals("GOOGLE")) {
+            throw new CustomException(NOT_SOCIAL_LOGIN);
+        }
+
+        if (!passwordEncoder.matches(enteredPassword, user.getPassword())) {
+            throw new CustomException(NOT_MATCHED_PASSWORD);
+        }
     }
 }

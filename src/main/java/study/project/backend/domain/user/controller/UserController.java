@@ -25,6 +25,14 @@ public class UserController {
         return CustomResponseEntity.success(userService.register(request.toServiceRequest()));
     }
 
+    // 로그인 API
+    @PostMapping("/login")
+    public CustomResponseEntity<UserResponse.Login> login(
+        @RequestBody @Valid UserRequest.Login request
+    ) {
+        return CustomResponseEntity.success(userService.login(request.toServiceRequest()));
+    }
+
     // 소셜 로그인 API
     @PostMapping("/signin")
     public CustomResponseEntity<UserResponse.Login> socialLogin(

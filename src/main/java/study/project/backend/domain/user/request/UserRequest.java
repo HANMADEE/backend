@@ -14,6 +14,25 @@ public class UserRequest {
     @AllArgsConstructor
     @NoArgsConstructor
     @Getter
+    public static class Login {
+
+        @NotNull(message = "이메일은 필수 값 입니다.")
+        private String email;
+
+        @NotNull(message = "비밀번호는 필수 값 입니다.")
+        private String password;
+
+        public UserServiceRequest.Login toServiceRequest() {
+            return UserServiceRequest.Login.builder()
+                    .email(email)
+                    .password(password)
+                    .build();
+        }
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
     public static class UpdateNickName {
         @NotNull(message = "해당 요청은 닉네임이 필수값 입니다.")
         @NotBlank(message = "요청 값이 비어있습니다.")
