@@ -50,4 +50,13 @@ public class Comment extends BaseEntity {
 
     @NotNull
     private String kind;
+
+    public void toUpdate(String content, String imageUrl, String font, String sort, String backgroundColor, String kind) {
+        this.content = content;
+        this.imageUrl = imageUrl;
+        this.font = font;
+        this.sort = sort;
+        this.backgroundColor = backgroundColor;
+        this.kind = kind;
+    }
 }

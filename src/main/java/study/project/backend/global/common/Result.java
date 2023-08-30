@@ -17,7 +17,11 @@ public enum Result {
     // RollingPaper
     NOT_FOUND_PAPER(-2000, "존재하지 않는 롤링페이퍼"),
     NOT_MY_PAPER(-2001, "내가 만든 롤링페이퍼가 아닙니다."),
-    UNSUPPORTED_SORT_OPTION(-2002, "지원하지 않는 정렬 방식입니다.");
+    UNSUPPORTED_SORT_OPTION(-2002, "지원하지 않는 정렬 방식입니다."),
+
+    // Comment
+    NOT_FOUND_COMMENT(-3000, "존재하지 않는 코멘트"),
+    NOT_MY_COMMENT(-3001, "내가 작성한 코멘트가 아닙니다.");
 
     private final int code;
     private final String message;

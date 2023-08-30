@@ -20,4 +20,18 @@ public class CommentServiceRequest {
         private String backgroundColor;
         private String kind;
     }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Builder
+    public static class Update {
+        private Long commentId;
+        private String content;
+        private String imageUrl;
+        private String font;
+        private String sort;
+        private String backgroundColor;
+        private String kind;
+    }
 }

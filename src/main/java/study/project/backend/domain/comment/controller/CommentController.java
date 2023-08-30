@@ -36,4 +36,15 @@ public class CommentController {
     ) {
         return CustomResponseEntity.success(commentService.readMyComment(userId));
     }
+
+    // 한마디 수정 API
+    @PatchMapping("/comment")
+    public CustomResponseEntity<Void> updateComment(
+            @RequestBody CommentRequest.Update request,
+            @AuthenticationPrincipal Long userId
+    ) {
+        return CustomResponseEntity.success(
+                commentService.updateComment(request.toServiceRequest(), userId)
+        );
+    }
 }
