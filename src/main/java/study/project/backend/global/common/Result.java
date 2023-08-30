@@ -15,7 +15,8 @@ public enum Result {
     NOT_SOCIAL_LOGIN(-1003, "해당 아이디는 소셜로그인으로 회원가입된 회원입니다."),
 
     // RollingPaper
-    NOT_FOUND_PAPER(-2000, "존재하지 않는 롤링페이퍼");
+    NOT_FOUND_PAPER(-2000, "존재하지 않는 롤링페이퍼"),
+    NOT_MY_PAPER(-2001, "내가 만든 롤링페이퍼가 아닙니다.");
 
     private final int code;
     private final String message;

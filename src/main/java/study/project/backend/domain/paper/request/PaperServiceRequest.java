@@ -26,4 +26,16 @@ public class PaperServiceRequest {
             return Optional.ofNullable(theme);
         }
     }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Builder
+    public static class Update {
+        private Long paperId;
+        private String subject;
+        private String theme;
+        private Boolean isOpen;
+        private Boolean isLikeOpen;
+    }
 }

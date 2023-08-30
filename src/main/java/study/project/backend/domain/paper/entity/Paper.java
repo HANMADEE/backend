@@ -54,4 +54,11 @@ public class Paper extends BaseEntity {
     public void toGiftRollingPaper(Users user) {
         this.user = user;
     }
+
+    public void toUpdateRollingPaper(String subject, String theme, Boolean isOpen, Boolean isLikeOpen) {
+        this.subject = subject;
+        this.theme = theme;
+        this.isOpen = isOpen;
+        this.isLikeOpen = isLikeOpen;
+    }
 }

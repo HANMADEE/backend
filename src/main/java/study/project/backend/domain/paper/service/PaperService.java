@@ -9,10 +9,12 @@ import study.project.backend.domain.paper.request.PaperServiceRequest;
 import study.project.backend.domain.paper.response.PaperResponse;
 import study.project.backend.domain.user.entity.Users;
 import study.project.backend.domain.user.repository.UserRepository;
+import study.project.backend.global.common.Result;
 import study.project.backend.global.common.exception.CustomException;
 
 import java.util.List;
 
+import static study.project.backend.global.common.Result.*;
 import static study.project.backend.global.common.Result.NOT_FOUND_PAPER;
 import static study.project.backend.global.common.Result.NOT_FOUND_USER;
 
@@ -62,6 +64,25 @@ public class PaperService {
                 .toList();
     }
 
+    // 롤링페이퍼 수정 API
+    public Void updateRollingPaper(PaperServiceRequest.Update request, Long userId) {
+        Paper paper = getPaper(request.getPaperId());
+        validateMyPaper(userId, paper);
+
+        paper.toUpdateRollingPaper(
+                request.getSubject(), request.getTheme(),
+                request.getIsOpen(), request.getIsLikeOpen()
+        );
+
+        return null;
+    }
+
+    private static void validateMyPaper(Long userId, Paper paper) {
+        if (!paper.getUser().getId().equals(userId)) {
+            throw new CustomException(NOT_MY_PAPER);
+        }
+    }
+
     // method
     private Paper getPaper(Long paperId) {
         return paperRepository.findById(paperId).orElseThrow(
@@ -91,5 +112,4 @@ public class PaperService {
                 () -> new CustomException(NOT_FOUND_USER)
         );
     }
-
 }

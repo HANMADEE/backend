@@ -52,4 +52,15 @@ public class PaperController {
         return CustomResponseEntity.success(paperService.readRollingPaper(paperId));
     }
 
+    // 롤링페이퍼 수정 API
+    @PatchMapping("")
+    public CustomResponseEntity<Void> updateRollingPaper(
+            @RequestBody @Valid PaperRequest.Update request,
+            @AuthenticationPrincipal Long userId
+    ) {
+        return CustomResponseEntity.success(
+                paperService.updateRollingPaper(request.toServiceRequest(), userId)
+        );
+    }
+
 }
