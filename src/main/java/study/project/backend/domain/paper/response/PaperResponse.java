@@ -8,6 +8,8 @@ import study.project.backend.domain.comment.entity.Comment;
 import study.project.backend.domain.paper.entity.Paper;
 import study.project.backend.domain.user.entity.Users;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,6 +87,34 @@ public class PaperResponse {
                     .comments(paper.getComments().stream()
                             .map(Comments::toEntity)
                             .toList())
+                    .build();
+        }
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Builder
+    public static class ALL {
+        private Long id;
+        private Long userId;
+        private String userName;
+        private String subject;
+        private String theme;
+        private String likes;
+        private String createdAt;
+
+        public static PaperResponse.ALL response(Paper paper) {
+            String likes = (paper.getIsLikeOpen()) ?
+                    String.valueOf(paper.getPaperLikes().size()) : "비공개";
+            return ALL.builder()
+                    .id(paper.getId())
+                    .userId(paper.getUser().getId())
+                    .userName(paper.getUser().getNickName())
+                    .subject(paper.getSubject())
+                    .theme(paper.getTheme())
+                    .likes(likes)
+                    .createdAt(paper.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                     .build();
         }
     }

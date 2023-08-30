@@ -1,11 +1,15 @@
 package study.project.backend.domain.paper.Repository;
 
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import study.project.backend.domain.paper.entity.Paper;
-import study.project.backend.domain.paper.entity.QPaperLike;
+import study.project.backend.domain.paper.entity.PaperSort;
+import study.project.backend.global.common.Result;
+import study.project.backend.global.common.exception.CustomException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,5 +43,30 @@ public class PaperRepositoryImpl implements PaperCustomRepository {
                 .where(paper.user.id.eq(userId))
                 .fetch();
     }
+
+    @Override
+    public List<Paper> findByAllPaperSortWithFetchJoin(PaperSort sort) {
+        return queryFactory
+                .selectFrom(paper)
+                .leftJoin(paper.paperLikes, paperLike).fetchJoin()
+                .leftJoin(paper.user, users).fetchJoin()
+                .where(paper.isOpen.eq(true))
+                .orderBy(sortBy(sort))
+                .fetch();
+    }
+
+    private OrderSpecifier<?> sortBy(PaperSort sort) {
+        switch (sort.name()) {
+            case "LIKES" -> {
+                return paper.paperLikes.size().desc();
+            }
+            case "LATEST" -> {
+                return paper.createdAt.desc();
+            }
+        }
+
+        throw new CustomException(Result.UNSUPPORTED_SORT_OPTION);
+    }
+
 
 }

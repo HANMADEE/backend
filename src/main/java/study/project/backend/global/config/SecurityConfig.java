@@ -56,7 +56,7 @@ public class SecurityConfig {
                                 "/version",
                                 "/auth/register", "/auth/login", "/auth/signin", "/auth/users",
                                 "/login/kakao", "/login/google",
-                                "/paper/{paperId}", "/paper/{paperId}/**"
+                                "/paper/{paperId}", "/paper/{paperId}/**", "/paper/all"
                         )
                         .permitAll()
                 )

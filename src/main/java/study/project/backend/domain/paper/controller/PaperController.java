@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import study.project.backend.domain.paper.entity.PaperSort;
 import study.project.backend.domain.paper.request.PaperRequest;
 import study.project.backend.domain.paper.response.PaperResponse;
 import study.project.backend.domain.paper.service.PaperService;
@@ -70,6 +71,14 @@ public class PaperController {
             @AuthenticationPrincipal Long userId
     ) {
         return CustomResponseEntity.success(paperService.deleteRollingPaper(paperId, userId));
+    }
+
+    // 롤링페이퍼 정렬 전체 조회 API
+    @GetMapping("/all")
+    public CustomResponseEntity<List<PaperResponse.ALL>> readAllRollingPaper(
+            @RequestParam PaperSort sort
+    ) {
+        return CustomResponseEntity.success(paperService.readAllRollingPaper(sort));
     }
 
 }

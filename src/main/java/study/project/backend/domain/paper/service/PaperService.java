@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.project.backend.domain.paper.Repository.PaperRepository;
 import study.project.backend.domain.paper.entity.Paper;
+import study.project.backend.domain.paper.entity.PaperSort;
 import study.project.backend.domain.paper.request.PaperServiceRequest;
 import study.project.backend.domain.paper.response.PaperResponse;
 import study.project.backend.domain.user.entity.Users;
@@ -86,13 +87,19 @@ public class PaperService {
         return null;
     }
 
+    // 롤링페이퍼 정렬 전체 조회 API
+    public List<PaperResponse.ALL> readAllRollingPaper(PaperSort sort) {
+        List<Paper> papers = paperRepository.findByAllPaperSortWithFetchJoin(sort);
+        return papers.stream().map(PaperResponse.ALL::response).toList();
+    }
+
+    // method
+
     private static void validateMyPaper(Long userId, Paper paper) {
         if (!paper.getUser().getId().equals(userId)) {
             throw new CustomException(NOT_MY_PAPER);
         }
     }
-
-    // method
     private Paper getPaper(Long paperId) {
         return paperRepository.findById(paperId).orElseThrow(
                 () -> new CustomException(NOT_FOUND_PAPER)
