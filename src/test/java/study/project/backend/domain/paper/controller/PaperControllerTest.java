@@ -2,11 +2,13 @@ package study.project.backend.domain.paper.controller;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import study.project.backend.domain.ControllerTestSupport;
 import study.project.backend.domain.paper.request.PaperRequest;
 
+import static org.springframework.http.HttpHeaders.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -72,6 +74,18 @@ class PaperControllerTest extends ControllerTestSupport {
         mockMvc.perform(httpRequest)
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
 
+    @DisplayName("내 롤링페이퍼 조회 API")
+    @Test
+    void readMyRollingPaper() throws Exception{
+        // given
+        MockHttpServletRequestBuilder httpRequest = MockMvcRequestBuilders.get("/paper")
+                .header(AUTHORIZATION, "Bearer {token}");
+
+        // when // then
+        mockMvc.perform(httpRequest)
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }

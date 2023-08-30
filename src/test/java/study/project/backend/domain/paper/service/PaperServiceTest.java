@@ -9,12 +9,16 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import study.project.backend.domain.comment.entity.Comment;
 import study.project.backend.domain.comment.repository.CommentRepository;
+import study.project.backend.domain.paper.Repository.PaperLikeRepository;
 import study.project.backend.domain.paper.Repository.PaperRepository;
 import study.project.backend.domain.paper.entity.Paper;
+import study.project.backend.domain.paper.entity.PaperLike;
 import study.project.backend.domain.paper.request.PaperRequest;
 import study.project.backend.domain.paper.response.PaperResponse;
 import study.project.backend.domain.user.entity.Users;
 import study.project.backend.domain.user.repository.UserRepository;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
@@ -24,6 +28,9 @@ import static study.project.backend.domain.user.entity.Authority.ROLE_USER;
 @ActiveProfiles("test")
 @Transactional
 class PaperServiceTest {
+
+    @Autowired
+    private PaperLikeRepository paperLikeRepository;
 
     @Autowired
     private EntityManager entityManager;
@@ -154,6 +161,45 @@ class PaperServiceTest {
                         tuple(comment2.getId(), "익명", "생일 축하해 선물은 나야!", null, "godic", "center", "white", "친구"),
                         tuple(comment3.getId(), "익명", "생일 축하해 근데 나 배고파", null, "godic", "center", "white", "친구")
                 );
+    }
+
+    @DisplayName("유저가 자신의 롤링페이퍼들을 조회한다.")
+    @Test
+    void test() {
+        // given
+        Users user = saveUser("한마디", "hanmadee@gmail.com");
+        Users user1 = saveUser("두마디", "doomadee@gmail.com");
+
+        Paper paper1 = savePaper(user);
+        Paper paper2 = savePaper(user);
+        Paper paper3 = savePaper(user);
+
+        PaperLike paperLike1 = savePaperLike(user1, paper1);
+        PaperLike paperLike2 = savePaperLike(user1, paper3);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        List<PaperResponse.SimpleRead> response = paperService.readMyRollingPaper(user.getId());
+
+        // then
+        assertThat(response)
+                .extracting("id", "likes")
+                .contains(
+                        tuple(paper1.getId(), 1),
+                        tuple(paper2.getId(), 0),
+                        tuple(paper3.getId(), 1)
+                );
+    }
+
+    private PaperLike savePaperLike(Users user, Paper paper) {
+        return paperLikeRepository.save(
+                PaperLike.builder()
+                        .user(user)
+                        .paper(paper)
+                        .build()
+        );
     }
 
     public Users saveUser(String nickName, String email) {
