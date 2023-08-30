@@ -19,8 +19,7 @@ import study.project.backend.domain.user.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
+import static org.assertj.core.api.Assertions.*;
 import static study.project.backend.domain.user.entity.Authority.ROLE_USER;
 
 @SpringBootTest
@@ -120,12 +119,63 @@ class CommentServiceTest {
 
         // then
         assertThat(response)
-                .extracting("paperUserName","content")
+                .extracting("paperUserName", "content")
                 .contains(
-                        tuple("한마딩","무엇을 적을까요1"),
-                        tuple("한마딩","무엇을 적을까요2"),
-                        tuple("한마딩","무엇을 적을까요3")
+                        tuple("한마딩", "무엇을 적을까요1"),
+                        tuple("한마딩", "무엇을 적을까요2"),
+                        tuple("한마딩", "무엇을 적을까요3")
                 );
+
+    }
+
+    @DisplayName("유저가 자신이 남긴 코멘트를 수정한다.")
+    @Test
+    void updateComment() {
+        // given
+        Users user = saveUser("한마디", "hanmadee@gmail.com");
+        Users user2 = saveUser("한마디2", "hanmadee2@gmail.com");
+        Paper paper = savePaper(user);
+        Comment comment = saveComment(user2, paper, "생일축하해!");
+
+        Long commentId = comment.getId();
+        CommentRequest.Update request = new CommentRequest.Update(
+                commentId, "글수정 테스트", null, "goollim", "left", "white", "친구"
+        );
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        commentService.updateComment(request.toServiceRequest(), user2.getId());
+
+        // then
+        Comment validateComment = commentRepository.findById(commentId).get();
+        assertThat(validateComment)
+                .extracting("content", "imageUrl", "font", "sort", "backgroundColor", "kind")
+                .contains("글수정 테스트", null, "goollim", "left", "white", "친구");
+    }
+
+    @DisplayName("유저가 다른 사람이 남긴 코멘트를 수정하려하면 Exception 발생한다.")
+    @Test
+    void updateCommentWithNotMyCommentThrowException() {
+        // given
+        Users user = saveUser("한마디", "hanmadee@gmail.com");
+        Users user2 = saveUser("한마디2", "hanmadee2@gmail.com");
+        Paper paper = savePaper(user);
+        Comment comment = saveComment(user2, paper, "생일축하해!");
+
+        Long commentId = comment.getId();
+        CommentRequest.Update request = new CommentRequest.Update(
+                commentId, "글수정 테스트", null, "goollim", "left", "white", "친구"
+        );
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // when // then
+        assertThatThrownBy(() -> commentService.updateComment(request.toServiceRequest(), user.getId()))
+                .extracting("result.code", "result.message")
+                .contains(-3001, "내가 작성한 코멘트가 아닙니다.");
 
     }
 
