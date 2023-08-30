@@ -340,6 +340,37 @@ public class PaperControllerDocsTest extends RestDocsSupport {
                 .andDo(document);
     }
 
+    @DisplayName("롤링페이퍼 삭제 API")
+    @Test
+    void deleteRollingPaper() throws Exception {
+        // given
+        MockHttpServletRequestBuilder httpRequest = RestDocumentationRequestBuilders.delete("/paper/{paperId}", 1L)
+                .header(AUTHORIZATION, "Bearer {token}");
+
+        ResourceSnippetParameters parameters = ResourceSnippetParameters.builder()
+                .tag("롤링페이퍼 API")
+                .summary("롤링페이퍼 삭제 API")
+                .requestHeaders(
+                        headerWithName("Authorization")
+                                .description("Swagger 요청시 해당 입력칸이 아닌 우측 상단 자물쇠 " +
+                                        "또는 Authorize 버튼을 이용해 토큰을 넣어주세요"))
+                .pathParameters(
+                        parameterWithName("paperId").description("롤링페이퍼 ID"))
+                .responseFields(
+                        fieldWithPath("code").type(NUMBER).description("상태 코드"),
+                        fieldWithPath("message").type(STRING).description("상태 메세지"))
+                .responseSchema(Schema.schema("Default.png"))
+                .build();
+
+        RestDocumentationResultHandler document = documentHandler("deleteRollingPaper", prettyPrint(), parameters);
+
+        // when // then
+        mockMvc.perform(httpRequest)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document);
+    }
+
     // method
     public static RestDocumentationResultHandler documentHandler(
             String identifier, OperationPreprocessor request,
