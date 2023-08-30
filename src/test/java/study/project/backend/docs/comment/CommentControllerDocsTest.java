@@ -1,10 +1,13 @@
 package study.project.backend.docs.comment;
 
+import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.Schema;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+import org.springframework.restdocs.operation.preprocess.OperationPreprocessor;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import study.project.backend.docs.RestDocsSupport;
@@ -163,12 +166,71 @@ public class CommentControllerDocsTest extends RestDocsSupport {
                         fieldWithPath("data[].kind").type(STRING).description("코멘트 관계 유형"))
                 .build();
 
+        RestDocumentationResultHandler document =
+                documentHandler("readMyComment", prettyPrint(), parameters);
+
         // when // then
         mockMvc.perform(httpRequest)
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("readMyComment",
-                        preprocessResponse(prettyPrint()),
-                        resource(parameters)));
+                .andDo(document);
+    }
+
+    @DisplayName("한마디 수정 API")
+    @Test
+    void updateComment() throws Exception {
+        // given
+        CommentRequest.Update request = new CommentRequest.Update(
+                1L, "글수정 테스트", "https://example.s3.ap-northeast-2.amazonaws.com/image/default.png", "goollim", "left", "white", "친구"
+        );
+
+        MockHttpServletRequestBuilder httpRequest = RestDocumentationRequestBuilders.patch("/comment")
+                .header(AUTHORIZATION, "Bearer {token}")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(APPLICATION_JSON);
+
+        ResourceSnippetParameters parameters = ResourceSnippetParameters.builder()
+                .tag("코멘트(한마디) API")
+                .summary("한마디 수정 API")
+                .requestHeaders(
+                        headerWithName("Authorization")
+                                .description("Swagger 요청시 해당 입력칸이 아닌 우측 상단 자물쇠 " +
+                                        "또는 Authorize 버튼을 이용해 토큰을 넣어주세요"))
+                .requestFields(
+                        fieldWithPath("commentId").type(NUMBER).description("코멘트 ID"),
+                        fieldWithPath("content").type(STRING).description("코멘트 내용"),
+                        fieldWithPath("imageUrl").type(STRING).description("코멘트 이미지"),
+                        fieldWithPath("font").type(STRING).description("코멘트 폰트"),
+                        fieldWithPath("sort").type(STRING).description("코멘트 정렬"),
+                        fieldWithPath("backgroundColor").type(STRING).description("코멘트 배경색"),
+                        fieldWithPath("kind").type(STRING).description("코멘트 관계 유형"))
+                .responseFields(
+                        fieldWithPath("code").type(NUMBER).description("상태 코드"),
+                        fieldWithPath("message").type(STRING).description("상태 메세지"))
+                .requestSchema(Schema.schema("CommentRequest.Update"))
+                .responseSchema(Schema.schema("Default"))
+                .build();
+
+        RestDocumentationResultHandler document =
+                documentHandler("updateComment", prettyPrint(), prettyPrint(), parameters);
+
+        // when // then
+        mockMvc.perform(httpRequest)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document);
+    }
+
+    public static RestDocumentationResultHandler documentHandler(
+            String identifier, OperationPreprocessor request,
+            OperationPreprocessor response, ResourceSnippetParameters parameters
+    ) {
+        return MockMvcRestDocumentationWrapper.document(identifier, preprocessRequest(request), preprocessResponse(response), resource(parameters));
+    }
+
+    public static RestDocumentationResultHandler documentHandler(
+            String identifier, OperationPreprocessor response, ResourceSnippetParameters parameters
+    ) {
+        return MockMvcRestDocumentationWrapper.document(identifier, preprocessResponse(response), resource(parameters));
     }
 }
