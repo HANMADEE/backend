@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+import org.springframework.restdocs.operation.preprocess.OperationPreprocessor;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import study.project.backend.docs.RestDocsSupport;
@@ -239,5 +240,75 @@ public class PaperControllerDocsTest extends RestDocsSupport {
                 .andDo(document("readRollingPaper",
                         preprocessResponse(prettyPrint()),
                         resource(parameters)));
+    }
+
+    @DisplayName("내 롤링페이퍼 조회 API")
+    @Test
+    void readMyRollingPaper() throws Exception {
+        // given
+
+        PaperResponse.SimpleRead simpleRead1 = new PaperResponse.SimpleRead(
+                1L, "생일", "https://example.s3.ap-northeast-2.amazonaws.com/image/default.png", false, false, 25
+        );
+
+        PaperResponse.SimpleRead simpleRead2 = new PaperResponse.SimpleRead(
+                2L, "입사", "https://example.s3.ap-northeast-2.amazonaws.com/image/default.png", true, true, 17
+        );
+
+        PaperResponse.SimpleRead simpleRead3 = new PaperResponse.SimpleRead(
+                3L, "회고", "https://example.s3.ap-northeast-2.amazonaws.com/image/default.png", false, true, 56
+        );
+
+        PaperResponse.SimpleRead simpleRead4 = new PaperResponse.SimpleRead(
+                4L, "전역", "https://example.s3.ap-northeast-2.amazonaws.com/image/default.png", true, false, 105
+        );
+
+        given(paperService.readMyRollingPaper(any()))
+                .willReturn(
+                        List.of(simpleRead1, simpleRead2, simpleRead3, simpleRead4)
+                );
+
+        MockHttpServletRequestBuilder httpRequest = RestDocumentationRequestBuilders.get("/paper")
+                .header(AUTHORIZATION, "Bearer {token}");
+
+        ResourceSnippetParameters parameters = ResourceSnippetParameters.builder()
+                .tag("롤링페이퍼 API")
+                .summary("내 롤링페이퍼 조회 API")
+                .requestHeaders(
+                        headerWithName("Authorization")
+                                .description("Swagger 요청시 해당 입력칸이 아닌 우측 상단 자물쇠 " +
+                                        "또는 Authorize 버튼을 이용해 토큰을 넣어주세요"))
+                .responseFields(
+                        fieldWithPath("code").type(NUMBER).description("상태 코드"),
+                        fieldWithPath("message").type(STRING).description("상태 메세지"),
+                        fieldWithPath("data[].id").type(NUMBER).description("롤링페이퍼 ID"),
+                        fieldWithPath("data[].subject").type(STRING).description("주제"),
+                        fieldWithPath("data[].theme").type(STRING).description("테마"),
+                        fieldWithPath("data[].isOpen").type(BOOLEAN).description("전체 공개 여부"),
+                        fieldWithPath("data[].isLikeOpen").type(BOOLEAN).description("좋아요 공개 여부"),
+                        fieldWithPath("data[].likes").type(NUMBER).description("좋아요 수"))
+                .build();
+
+        RestDocumentationResultHandler document = documentHandler("readMyRollingPaper", prettyPrint(), parameters);
+
+        // when // then
+        mockMvc.perform(httpRequest)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document);
+    }
+
+    // method
+    public static RestDocumentationResultHandler documentHandler(
+            String identifier, OperationPreprocessor request,
+            OperationPreprocessor response, ResourceSnippetParameters parameters
+    ) {
+        return document(identifier, preprocessRequest(request), preprocessResponse(response), resource(parameters));
+    }
+
+    public static RestDocumentationResultHandler documentHandler(
+            String identifier, OperationPreprocessor response, ResourceSnippetParameters parameters
+    ) {
+        return document(identifier, preprocessResponse(response), resource(parameters));
     }
 }
