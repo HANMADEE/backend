@@ -1,5 +1,6 @@
 package study.project.backend.domain.paper.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
@@ -82,6 +83,25 @@ class PaperControllerTest extends ControllerTestSupport {
         // given
         MockHttpServletRequestBuilder httpRequest = MockMvcRequestBuilders.get("/paper")
                 .header(AUTHORIZATION, "Bearer {token}");
+
+        // when // then
+        mockMvc.perform(httpRequest)
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("롤링페이퍼 수정 API")
+    @Test
+    void updateRollingPaper() throws Exception {
+        // given
+        PaperRequest.Update request = new PaperRequest.Update(
+                1L, "전역", "default.png", true, true
+        );
+
+        MockHttpServletRequestBuilder httpRequest = MockMvcRequestBuilders.patch("/paper")
+                .header(AUTHORIZATION, "Bearer {token}")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(APPLICATION_JSON);
 
         // when // then
         mockMvc.perform(httpRequest)

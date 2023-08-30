@@ -20,8 +20,7 @@ import study.project.backend.domain.user.repository.UserRepository;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
+import static org.assertj.core.api.Assertions.*;
 import static study.project.backend.domain.user.entity.Authority.ROLE_USER;
 
 @SpringBootTest
@@ -165,7 +164,7 @@ class PaperServiceTest {
 
     @DisplayName("유저가 자신의 롤링페이퍼들을 조회한다.")
     @Test
-    void test() {
+    void readMyRollingPaper() {
         // given
         Users user = saveUser("한마디", "hanmadee@gmail.com");
         Users user1 = saveUser("두마디", "doomadee@gmail.com");
@@ -191,6 +190,52 @@ class PaperServiceTest {
                         tuple(paper2.getId(), 0),
                         tuple(paper3.getId(), 1)
                 );
+    }
+
+    @DisplayName("유저가 자신의 롤링페이퍼를 수정한다.")
+    @Test
+    void updateRollingPaper() {
+        // given
+        Users user = saveUser("한마디", "hanmadee@gmail.com");
+        Paper paper = savePaper(user);
+
+        PaperRequest.Update request = new PaperRequest.Update(
+                paper.getId(), "전역", "default.png", true, true
+        );
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        paperService.updateRollingPaper(request.toServiceRequest(), user.getId());
+
+        // then
+        Paper validatePaper = paperRepository.findById(paper.getId()).get();
+        assertThat(validatePaper)
+                .extracting("subject", "theme", "isOpen", "isLikeOpen")
+                .contains("전역", "default.png", true, true);
+    }
+
+    @DisplayName("유저가 다른 사람의 롤링페이퍼를 수정할때 Exception 발생한다.")
+    @Test
+    void updateRollingPaperWithNotMyPaperThrowException() {
+        // given
+        Users user = saveUser("한마디", "hanmadee@gmail.com");
+        Users user1 = saveUser("한마디", "hanmadee@gmail.com");
+        Paper paper = savePaper(user);
+
+        PaperRequest.Update request = new PaperRequest.Update(
+                paper.getId(), "전역", "default.png", true, true
+        );
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // when // then
+        assertThatThrownBy(
+                () -> paperService.updateRollingPaper(request.toServiceRequest(), user1.getId()))
+                .extracting("result.code", "result.message")
+                .contains(-2001, "내가 만든 롤링페이퍼가 아닙니다.");
     }
 
     private PaperLike savePaperLike(Users user, Paper paper) {
