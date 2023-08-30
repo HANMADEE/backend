@@ -371,6 +371,74 @@ public class PaperControllerDocsTest extends RestDocsSupport {
                 .andDo(document);
     }
 
+    @DisplayName("롤링페이퍼 정렬 전체 조회 API")
+    @Test
+    void readAllRollingPaper() throws Exception {
+        // given
+        PaperResponse.ALL paper1 = PaperResponse.ALL.builder()
+                .id(1L)
+                .userId(1L)
+                .userName("한마디")
+                .subject("생일")
+                .theme("https://example.s3.ap-northeast-2.amazonaws.com/image/default.png")
+                .likes("12")
+                .createdAt("2023-08-27")
+                .build();
+
+        PaperResponse.ALL paper2 = PaperResponse.ALL.builder()
+                .id(4L)
+                .userId(12L)
+                .userName("고읍동축구왕")
+                .subject("한마디 적고가라")
+                .theme("https://example.s3.ap-northeast-2.amazonaws.com/image/default.png")
+                .likes("96")
+                .createdAt("2023-08-13")
+                .build();
+
+        PaperResponse.ALL paper3 = PaperResponse.ALL.builder()
+                .id(13L)
+                .userId(5L)
+                .userName("뻐꾸기")
+                .subject("인사")
+                .theme("https://example.s3.ap-northeast-2.amazonaws.com/image/default.png")
+                .likes("527")
+                .createdAt("2023-07-21")
+                .build();
+
+        given(paperService.readAllRollingPaper(any()))
+                .willReturn(List.of(paper1, paper2, paper3));
+
+        MockHttpServletRequestBuilder httpRequest = RestDocumentationRequestBuilders.get("/paper/all")
+                .param("sort", "LIKES");
+
+        ResourceSnippetParameters parameters = ResourceSnippetParameters.builder()
+                .tag("롤링페이퍼 API")
+                .summary("롤링페이퍼 정렬 전체 조회 API")
+                .queryParameters(
+                        parameterWithName("sort").description("parameter : 'LIKES' or 'LATEST' "))
+                .responseFields(
+                        fieldWithPath("code").type(NUMBER).description("상태 코드"),
+                        fieldWithPath("message").type(STRING).description("상태 메세지"),
+                        fieldWithPath("data[].id").type(NUMBER).description("롤링 페이퍼 ID"),
+                        fieldWithPath("data[].userId").type(NUMBER).description("롤링 페이퍼 유저 ID"),
+                        fieldWithPath("data[].userName").type(STRING).description("롤링 페이퍼 유저 이름"),
+                        fieldWithPath("data[].subject").type(STRING).description("롤링 페이퍼 주제"),
+                        fieldWithPath("data[].theme").type(STRING).description("롤링 페이퍼 테마"),
+                        fieldWithPath("data[].likes").type(STRING).description("롤링 페이퍼 좋아요 수"),
+                        fieldWithPath("data[].createdAt").type(STRING).description("롤링 페이퍼 생성날짜"))
+                .responseSchema(Schema.schema("PaperResponse.All"))
+                .build();
+
+        RestDocumentationResultHandler document =
+                documentHandler("readAllRollingPaper", prettyPrint(), parameters);
+
+        // when // then
+        mockMvc.perform(httpRequest)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document);
+    }
+
     // method
     public static RestDocumentationResultHandler documentHandler(
             String identifier, OperationPreprocessor request,
