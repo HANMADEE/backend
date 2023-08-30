@@ -121,4 +121,17 @@ class PaperControllerTest extends ControllerTestSupport {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @DisplayName("롤링페이퍼 정렬 전체 조회 API")
+    @Test
+    void readAllRollingPaper() throws Exception {
+        // given
+        MockHttpServletRequestBuilder httpRequest = MockMvcRequestBuilders.get("/paper/all")
+                .param("sort", "LIKES");
+
+        // when // then
+        mockMvc.perform(httpRequest)
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }
