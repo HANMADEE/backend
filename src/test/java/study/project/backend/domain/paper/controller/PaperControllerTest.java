@@ -79,7 +79,7 @@ class PaperControllerTest extends ControllerTestSupport {
 
     @DisplayName("내 롤링페이퍼 조회 API")
     @Test
-    void readMyRollingPaper() throws Exception{
+    void readMyRollingPaper() throws Exception {
         // given
         MockHttpServletRequestBuilder httpRequest = MockMvcRequestBuilders.get("/paper")
                 .header(AUTHORIZATION, "Bearer {token}");
@@ -102,6 +102,19 @@ class PaperControllerTest extends ControllerTestSupport {
                 .header(AUTHORIZATION, "Bearer {token}")
                 .content(objectMapper.writeValueAsString(request))
                 .contentType(APPLICATION_JSON);
+
+        // when // then
+        mockMvc.perform(httpRequest)
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("롤링페이퍼 삭제 API")
+    @Test
+    void deleteRollingPaper() throws Exception {
+        // given
+        MockHttpServletRequestBuilder httpRequest = MockMvcRequestBuilders.delete("/paper/{paperId}", 1L)
+                .header(AUTHORIZATION, "Bearer {token}");
 
         // when // then
         mockMvc.perform(httpRequest)

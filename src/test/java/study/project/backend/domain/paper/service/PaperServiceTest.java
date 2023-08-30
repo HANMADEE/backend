@@ -19,6 +19,7 @@ import study.project.backend.domain.user.entity.Users;
 import study.project.backend.domain.user.repository.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static study.project.backend.domain.user.entity.Authority.ROLE_USER;
@@ -235,6 +236,45 @@ class PaperServiceTest {
         assertThatThrownBy(
                 () -> paperService.updateRollingPaper(request.toServiceRequest(), user1.getId()))
                 .extracting("result.code", "result.message")
+                .contains(-2001, "내가 만든 롤링페이퍼가 아닙니다.");
+    }
+
+    @DisplayName("유저가 자신의 롤링페이퍼를 삭제한다.")
+    @Test
+    void deleteRollingPaper() {
+        // given
+        Users user = saveUser("한마디", "hanmadee@gmail.com");
+        Paper paper = savePaper(user);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        Long paperId = paper.getId();
+
+        // when
+        paperService.deleteRollingPaper(paperId, user.getId());
+
+        // then
+        Optional<Paper> optionalPaper = paperRepository.findById(paperId);
+        assertThat(optionalPaper.isEmpty()).isTrue();
+    }
+
+    @DisplayName("유저가 다른 사람의 롤링페이퍼를 삭제할때 Exception 발생한다.")
+    @Test
+    void deleteRollingPaperWithNotMyPaperThrowException() {
+        // given
+        Users user = saveUser("한마디", "hanmadee@gmail.com");
+        Users user1 = saveUser("한마디", "hanmadee@gmail.com");
+        Paper paper = savePaper(user);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        Long paperId = paper.getId();
+
+        // when // then
+        assertThatThrownBy(() -> paperService.deleteRollingPaper(paperId, user1.getId()))
+                .extracting("result.code","result.message")
                 .contains(-2001, "내가 만든 롤링페이퍼가 아닙니다.");
     }
 
