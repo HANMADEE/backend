@@ -77,6 +77,15 @@ public class PaperService {
         return null;
     }
 
+    // 롤링페이퍼 삭제 API
+    public Void deleteRollingPaper(Long paperId, Long userId) {
+        Paper paper = getPaper(paperId);
+        validateMyPaper(userId, paper);
+
+        paperRepository.delete(paper);
+        return null;
+    }
+
     private static void validateMyPaper(Long userId, Paper paper) {
         if (!paper.getUser().getId().equals(userId)) {
             throw new CustomException(NOT_MY_PAPER);

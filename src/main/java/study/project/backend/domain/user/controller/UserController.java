@@ -18,6 +18,7 @@ public class UserController {
     private final UserService userService;
 
     // 회원가입 API
+    // TODO : 소셜로그인 이메일은 회원가입 못하게
     @PostMapping("/register")
     public CustomResponseEntity<UserResponse.Register> register(
             @RequestBody @Valid UserRequest.Register request

@@ -63,4 +63,13 @@ public class PaperController {
         );
     }
 
+    // 롤링페이퍼 삭제 API
+    @DeleteMapping("/{paperId}")
+    public CustomResponseEntity<Void> deleteRollingPaper(
+            @PathVariable Long paperId,
+            @AuthenticationPrincipal Long userId
+    ) {
+        return CustomResponseEntity.success(paperService.deleteRollingPaper(paperId, userId));
+    }
+
 }
