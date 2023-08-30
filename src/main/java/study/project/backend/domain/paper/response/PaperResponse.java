@@ -17,6 +17,30 @@ public class PaperResponse {
     @NoArgsConstructor
     @Getter
     @Builder
+    public static class SimpleRead {
+        private Long id;
+        private String subject;
+        private String theme;
+        private Boolean isOpen;
+        private Boolean isLikeOpen;
+        private Integer likes;
+
+        public static SimpleRead response(Paper paper) {
+            return SimpleRead.builder()
+                    .id(paper.getId())
+                    .subject(paper.getSubject())
+                    .theme(paper.getTheme())
+                    .isOpen(paper.getIsOpen())
+                    .isLikeOpen(paper.getIsLikeOpen())
+                    .likes(paper.getPaperLikes().size())
+                    .build();
+        }
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Builder
     public static class Create {
         private Long id;
         private Long userId;

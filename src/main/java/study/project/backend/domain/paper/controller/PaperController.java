@@ -9,6 +9,8 @@ import study.project.backend.domain.paper.response.PaperResponse;
 import study.project.backend.domain.paper.service.PaperService;
 import study.project.backend.global.common.CustomResponseEntity;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/paper")
@@ -22,6 +24,14 @@ public class PaperController {
             @RequestBody @Valid PaperRequest.Create request, @AuthenticationPrincipal Long userId
     ) {
         return CustomResponseEntity.success(paperService.createRollingPaper(request.toServiceRequest(), userId));
+    }
+
+    // 내 롤링페이퍼 조회 API
+    @GetMapping("")
+    public CustomResponseEntity<List<PaperResponse.SimpleRead>> readMyRollingPaper(
+            @AuthenticationPrincipal Long userId
+    ) {
+        return CustomResponseEntity.success(paperService.readMyRollingPaper(userId));
     }
 
     // 롤링페이퍼 선물하기 API
@@ -41,4 +51,5 @@ public class PaperController {
     ) {
         return CustomResponseEntity.success(paperService.readRollingPaper(paperId));
     }
+
 }

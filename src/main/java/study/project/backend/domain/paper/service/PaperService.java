@@ -11,6 +11,8 @@ import study.project.backend.domain.user.entity.Users;
 import study.project.backend.domain.user.repository.UserRepository;
 import study.project.backend.global.common.exception.CustomException;
 
+import java.util.List;
+
 import static study.project.backend.global.common.Result.NOT_FOUND_PAPER;
 import static study.project.backend.global.common.Result.NOT_FOUND_USER;
 
@@ -51,6 +53,15 @@ public class PaperService {
         return PaperResponse.Read.response(paper);
     }
 
+    // 내 롤링페이퍼 조회 API
+    public List<PaperResponse.SimpleRead> readMyRollingPaper(Long userId) {
+        List<Paper> papers = paperRepository.findByMyPaperWithFetchJoin(userId);
+
+        return papers.stream()
+                .map(PaperResponse.SimpleRead::response)
+                .toList();
+    }
+
     // method
     private Paper getPaper(Long paperId) {
         return paperRepository.findById(paperId).orElseThrow(
@@ -80,4 +91,5 @@ public class PaperService {
                 () -> new CustomException(NOT_FOUND_USER)
         );
     }
+
 }

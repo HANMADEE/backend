@@ -47,6 +47,10 @@ public class Paper extends BaseEntity {
     @Builder.Default
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "paper", fetch = LAZY)
+    @Builder.Default
+    private List<PaperLike> paperLikes = new ArrayList<>();
+
     public void toGiftRollingPaper(Users user) {
         this.user = user;
     }
