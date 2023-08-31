@@ -77,6 +77,16 @@ public class CommentService {
         return null;
     }
 
+    // 내 한마디 삭제 API
+    @Transactional
+    public Void deleteComment(Long commentId, Long userId) {
+        Comment comment = getComment(commentId);
+        validateMyComment(comment,userId);
+
+        commentRepository.delete(comment);
+        return null;
+    }
+
     private void validateMyComment(Comment comment, Long userId) {
         if (!comment.getUser().getId().equals(userId)) {
             throw new CustomException(NOT_MY_COMMENT);
@@ -99,5 +109,4 @@ public class CommentService {
                 () -> new CustomException(NOT_FOUND_USER)
         );
     }
-
 }

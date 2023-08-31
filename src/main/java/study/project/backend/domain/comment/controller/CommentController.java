@@ -47,4 +47,13 @@ public class CommentController {
                 commentService.updateComment(request.toServiceRequest(), userId)
         );
     }
+
+    // 한마디 삭제 API
+    @DeleteMapping("/comment/{commentId}")
+    public CustomResponseEntity<Void> deleteComment(
+            @PathVariable Long commentId,
+            @AuthenticationPrincipal Long userId
+    ) {
+        return CustomResponseEntity.success(commentService.deleteComment(commentId, userId));
+    }
 }
