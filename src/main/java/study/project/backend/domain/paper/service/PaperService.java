@@ -3,8 +3,10 @@ package study.project.backend.domain.paper.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import study.project.backend.domain.paper.Repository.PaperLikeRepository;
 import study.project.backend.domain.paper.Repository.PaperRepository;
 import study.project.backend.domain.paper.entity.Paper;
+import study.project.backend.domain.paper.entity.PaperLike;
 import study.project.backend.domain.paper.entity.PaperSort;
 import study.project.backend.domain.paper.request.PaperServiceRequest;
 import study.project.backend.domain.paper.response.PaperResponse;
@@ -14,6 +16,7 @@ import study.project.backend.global.common.Result;
 import study.project.backend.global.common.exception.CustomException;
 
 import java.util.List;
+import java.util.Optional;
 
 import static study.project.backend.global.common.Result.*;
 import static study.project.backend.global.common.Result.NOT_FOUND_PAPER;
@@ -26,6 +29,7 @@ public class PaperService {
 
     private final UserRepository userRepository;
     private final PaperRepository paperRepository;
+    private final PaperLikeRepository paperLikeRepository;
 
     // 롤링페이퍼 만들기 API
     @Transactional
@@ -66,6 +70,7 @@ public class PaperService {
     }
 
     // 롤링페이퍼 수정 API
+    @Transactional
     public Void updateRollingPaper(PaperServiceRequest.Update request, Long userId) {
         Paper paper = getPaper(request.getPaperId());
         validateMyPaper(userId, paper);
@@ -79,6 +84,7 @@ public class PaperService {
     }
 
     // 롤링페이퍼 삭제 API
+    @Transactional
     public Void deleteRollingPaper(Long paperId, Long userId) {
         Paper paper = getPaper(paperId);
         validateMyPaper(userId, paper);
@@ -93,6 +99,30 @@ public class PaperService {
         return papers.stream().map(PaperResponse.ALL::response).toList();
     }
 
+    // 롤링페이퍼 좋아요 및 취소 토글 API
+    @Transactional
+    public PaperResponse.ToggleLike toggleLike(Long paperId, Long userId) {
+        Users user = getUser(userId);
+        Paper paper = getPaper(paperId);
+        Optional<PaperLike> optionalPaperLike = paperLikeRepository.findByPaperAndUser(paper, user);
+
+        boolean isAdded;
+        // 이미 좋아요를 해놓은 상태면 취소
+        if (optionalPaperLike.isPresent()) {
+            paperLikeRepository.delete(optionalPaperLike.get());
+            isAdded = false;
+        } else {
+            // 처음 좋아요를 하는 상태면 등록
+            paperLikeRepository.save(PaperLike.builder()
+                    .user(user)
+                    .paper(paper)
+                    .build());
+            isAdded = true;
+        }
+
+        return PaperResponse.ToggleLike.response(isAdded);
+    }
+
     // method
 
     private static void validateMyPaper(Long userId, Paper paper) {
@@ -100,6 +130,7 @@ public class PaperService {
             throw new CustomException(NOT_MY_PAPER);
         }
     }
+
     private Paper getPaper(Long paperId) {
         return paperRepository.findById(paperId).orElseThrow(
                 () -> new CustomException(NOT_FOUND_PAPER)
@@ -128,4 +159,5 @@ public class PaperService {
                 () -> new CustomException(NOT_FOUND_USER)
         );
     }
+
 }

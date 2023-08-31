@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.project.backend.domain.comment.entity.Comment;
 import study.project.backend.domain.paper.entity.Paper;
+import study.project.backend.domain.paper.entity.PaperLike;
 import study.project.backend.domain.user.entity.Users;
 
 import java.time.LocalDateTime;
@@ -147,6 +148,20 @@ public class PaperResponse {
                     .sort(comment.getSort())
                     .backgroundColor(comment.getBackgroundColor())
                     .kind(comment.getKind())
+                    .build();
+        }
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Builder
+    public static class ToggleLike {
+        private Boolean isAdded;
+
+        public static ToggleLike response(Boolean isAdded) {
+            return ToggleLike.builder()
+                    .isAdded(isAdded)
                     .build();
         }
     }

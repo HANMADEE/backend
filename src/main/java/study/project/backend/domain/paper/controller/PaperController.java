@@ -81,4 +81,13 @@ public class PaperController {
         return CustomResponseEntity.success(paperService.readAllRollingPaper(sort));
     }
 
+    // 롤링페이퍼 좋아요 및 취소 토글 API
+    @PostMapping("/like/{paperId}")
+    public CustomResponseEntity<PaperResponse.ToggleLike> toggleLike(
+            @PathVariable Long paperId,
+            @AuthenticationPrincipal Long userId
+    ) {
+        return CustomResponseEntity.success(paperService.toggleLike(paperId, userId));
+    }
+
 }
