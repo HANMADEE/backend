@@ -13,6 +13,7 @@ import study.project.backend.domain.user.entity.Users;
 import study.project.backend.domain.user.repository.UserRepository;
 import study.project.backend.domain.user.request.UserServiceRequest;
 import study.project.backend.domain.user.response.UserResponse;
+import study.project.backend.global.common.Result;
 import study.project.backend.global.common.exception.CustomException;
 import study.project.backend.global.config.jwt.TokenProvider;
 
@@ -121,7 +122,30 @@ public class UserService {
         return null;
     }
 
+    @Transactional
+    public Void updatePassword(Long userId, UserServiceRequest.UpdatePassword request) {
+        Users user = getUser(userId);
+        validateUpdatePassword(request, user, userId);
+
+        user.toUpdatePassword(passwordEncoder.encode(request.getNewPassword()));
+        return null;
+    }
+
+
     // method
+    private void validateUpdatePassword(UserServiceRequest.UpdatePassword request, Users user, Long userId) {
+        if (!user.getId().equals(userId)) {
+            throw new CustomException(NOT_MY_ACCOUNT);
+        }
+
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw new CustomException(NOT_MATCHED_PASSWORD);
+        }
+
+        if (!request.getNewPassword().equals(request.getCheckNewPassword())) {
+            throw new CustomException(NOT_MATCHED_PASSWORD);
+        }
+    }
 
     private UserResponse.OAuth toSocialLogin(String code, Platform platform) {
         UserResponse.OAuth socialLoginUser = null;

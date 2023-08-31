@@ -55,4 +55,13 @@ public class UserServiceRequest {
         private String nickName;
         private String email;
     }
+
+    @AllArgsConstructor
+    @Getter
+    @Builder
+    public static class UpdatePassword {
+        private String oldPassword;
+        private String newPassword;
+        private String checkNewPassword;
+    }
 }

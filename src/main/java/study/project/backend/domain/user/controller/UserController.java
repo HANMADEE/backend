@@ -75,4 +75,12 @@ public class UserController {
         return CustomResponseEntity.success(userService.updateUser(userId, request.toServiceRequest()));
     }
 
+    // 비밀번호 변경 API
+    @PatchMapping("/password")
+    public CustomResponseEntity<Void> updatePassword(
+        @AuthenticationPrincipal Long userId,
+        @RequestBody @Valid UserRequest.UpdatePassword request
+    ) {
+        return CustomResponseEntity.success(userService.updatePassword(userId, request.toServiceRequest()));
+    }
 }

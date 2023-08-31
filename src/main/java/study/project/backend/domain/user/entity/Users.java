@@ -41,4 +41,8 @@ public class Users {
         this.nickName = nickName;
         this.email = email;
     }
+
+    public void toUpdatePassword(String newPassword) {
+        this.password = newPassword;
+    }
 }

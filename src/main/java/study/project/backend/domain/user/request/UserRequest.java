@@ -1,5 +1,6 @@
 package study.project.backend.domain.user.request;
 
+import com.sun.jdi.request.StepRequest;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -108,6 +109,32 @@ public class UserRequest {
             return UserServiceRequest.Update.builder()
                     .nickName(nickName)
                     .email(email)
+                    .build();
+        }
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    public static class UpdatePassword {
+        @NotNull(message = "이전 비밀번호는 필수 값 입니다.")
+        private String oldPassword;
+
+        @NotNull(message = "새로운 비밀번호는 필수 값 입니다.")
+        @Pattern(
+                regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
+                message = "비밀번호는 대문자, 소문자, 특수문자, 숫자를 포함하고 있어야 합니다.")
+        @Size(min = 8, max = 20, message = "비밀번호는 최소 8자 이상, 최대 20자 이하여야 합니다.")
+        private String newPassword;
+
+        @NotNull(message = "새로운 비밀번호 확인은 필수 값 입니다.")
+        private String checkNewPassword;
+
+        public UserServiceRequest.UpdatePassword toServiceRequest() {
+            return UserServiceRequest.UpdatePassword.builder()
+                    .oldPassword(oldPassword)
+                    .newPassword(newPassword)
+                    .checkNewPassword(checkNewPassword)
                     .build();
         }
     }
