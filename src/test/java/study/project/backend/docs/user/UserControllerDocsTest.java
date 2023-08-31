@@ -5,6 +5,7 @@ import com.epages.restdocs.apispec.Schema;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import study.project.backend.docs.RestDocsSupport;
@@ -168,7 +169,7 @@ public class UserControllerDocsTest extends RestDocsSupport {
                                         fieldWithPath("code").type(NUMBER).description("상태 코드"),
                                         fieldWithPath("message").type(STRING).description("상태 메세지"))
                                 .requestSchema(Schema.schema("UserRequest.UpdateNickName"))
-                                .responseSchema(Schema.schema("Default Response"))
+                                .responseSchema(Schema.schema("Default"))
                                 .build())));
     }
 
@@ -347,5 +348,48 @@ public class UserControllerDocsTest extends RestDocsSupport {
                                 .requestSchema(Schema.schema("UserRequest.Update"))
                                 .responseSchema(Schema.schema("UserResponse.Update"))
                                 .build())));
+    }
+
+    @DisplayName("비밀번호 변경 API")
+    @Test
+    void updatePassword() throws Exception{
+        // given
+        UserRequest.UpdatePassword request = new UserRequest.UpdatePassword(
+                "Abc1234!",
+                "Abc12345!",
+                "Abc12344!"
+        );
+
+        MockHttpServletRequestBuilder httpRequest = RestDocumentationRequestBuilders.patch("/auth/password")
+                .header(AUTHORIZATION, "Bearer {token}")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(APPLICATION_JSON);
+
+        ResourceSnippetParameters parameters = ResourceSnippetParameters.builder()
+                .tag("유저 API")
+                .summary("비밀번호 변경 API")
+                .requestHeaders(
+                        headerWithName("Authorization")
+                                .description("Swagger 요청시 해당 입력칸이 아닌 우측 상단 자물쇠 " +
+                                        "또는 Authorize 버튼을 이용해 토큰을 넣어주세요"))
+                .requestFields(
+                        fieldWithPath("oldPassword").type(STRING).description("이전 비밀번호"),
+                        fieldWithPath("newPassword").type(STRING).description("새로운 비밀번호"),
+                        fieldWithPath("checkNewPassword").type(STRING).description("새로운 비밀번호 확인"))
+                .responseFields(
+                        fieldWithPath("code").type(NUMBER).description("상태 코드"),
+                        fieldWithPath("message").type(STRING).description("상태 메세지"))
+                .requestSchema(Schema.schema("UserRequest.UpdatePassword"))
+                .responseSchema(Schema.schema("Default"))
+                .build();
+
+        RestDocumentationResultHandler document =
+                documentHandler("updatePassword", prettyPrint(), prettyPrint(), parameters);
+
+        // when // then
+        mockMvc.perform(httpRequest)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document);
     }
 }

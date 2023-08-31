@@ -359,7 +359,7 @@ public class PaperControllerDocsTest extends RestDocsSupport {
                 .responseFields(
                         fieldWithPath("code").type(NUMBER).description("상태 코드"),
                         fieldWithPath("message").type(STRING).description("상태 메세지"))
-                .responseSchema(Schema.schema("Default.png"))
+                .responseSchema(Schema.schema("Default"))
                 .build();
 
         RestDocumentationResultHandler document = documentHandler("deleteRollingPaper", prettyPrint(), parameters);
