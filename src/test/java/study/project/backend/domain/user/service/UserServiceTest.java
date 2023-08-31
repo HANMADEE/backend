@@ -220,6 +220,73 @@ class UserServiceTest {
                 .contains("hanmadee2@gmail.com", "두마디");
     }
 
+    @DisplayName("유저가 자신의 비밀번호를 수정한다.")
+    @Test
+    void updatePassword() {
+        // given
+        Users user = saveUser("한마디", "hanmadee@gmail.com", "Abc1234!");
+
+        UserRequest.UpdatePassword request = new UserRequest.UpdatePassword(
+                "Abc1234!",
+                "Abc12345!",
+                "Abc12345!"
+        );
+
+        em.flush();
+        em.clear();
+
+        // when
+        userService.updatePassword(user.getId(), request.toServiceRequest());
+
+        // then
+        Users validateUser = userRepository.findById(user.getId()).get();
+        boolean matches = passwordEncoder.matches("Abc12345!", validateUser.getPassword());
+        assertThat(matches).isTrue();
+
+    }
+
+    @DisplayName("유저가 자신의 비밀번호를 수정할때 이전 비밀번호를 잘못 입력하여 Exception 발생한다.")
+    @Test
+    void updatePasswordWithOldPasswordThrowException() {
+        // given
+        Users user = saveUser("한마디", "hanmadee@gmail.com", "Abc1234!");
+
+        UserRequest.UpdatePassword request = new UserRequest.UpdatePassword(
+                "Abc1234!!",
+                "Abc12345!",
+                "Abc12345!"
+        );
+
+        em.flush();
+        em.clear();
+
+        // when // then
+        assertThatThrownBy(() -> userService.updatePassword(user.getId(), request.toServiceRequest()))
+                .extracting("result.code","result.message")
+                .contains(-1002, "비밀번호가 일치하지 않습니다.");
+    }
+
+    @DisplayName("유저가 자신의 비밀번호를 수정할때 이전 비밀번호를 잘못 입력하여 Exception 발생한다.")
+    @Test
+    void updatePasswordWithNotMatchedNewPasswordThrowException() {
+        // given
+        Users user = saveUser("한마디", "hanmadee@gmail.com", "Abc1234!");
+
+        UserRequest.UpdatePassword request = new UserRequest.UpdatePassword(
+                "Abc1234!",
+                "Abc12345!",
+                "Abc12344!"
+        );
+
+        em.flush();
+        em.clear();
+
+        // when // then
+        assertThatThrownBy(() -> userService.updatePassword(user.getId(), request.toServiceRequest()))
+                .extracting("result.code","result.message")
+                .contains(-1002, "비밀번호가 일치하지 않습니다.");
+    }
+
     public Users saveUser(String nickName, String email) {
         return userRepository.save(
                 toUserEntity(nickName, email)

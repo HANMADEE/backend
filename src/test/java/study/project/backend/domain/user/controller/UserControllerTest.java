@@ -195,4 +195,25 @@ class UserControllerTest extends ControllerTestSupport {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @DisplayName("비밀번호 변경 API")
+    @Test
+    void updatePassword() throws Exception{
+        // given
+        UserRequest.UpdatePassword request = new UserRequest.UpdatePassword(
+                "Abc1234!",
+                "Abc12345!",
+                "Abc12344!"
+        );
+
+        MockHttpServletRequestBuilder httpRequest = MockMvcRequestBuilders.patch("/auth/password")
+                .header(AUTHORIZATION, "Bearer {token}")
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(APPLICATION_JSON);
+
+        // when // then
+        mockMvc.perform(httpRequest)
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }
