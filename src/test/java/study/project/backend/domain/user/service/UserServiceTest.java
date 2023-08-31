@@ -100,6 +100,23 @@ class UserServiceTest {
                 .contains("흥해라한마디", "1000test@naver.com", "default.png");
     }
 
+    @DisplayName("유저가 서비스의 회원가입을 진행할때 소셜 이메일로 하면 Exception 발생한다.")
+    @Test
+    void registerWithSocialException() {
+        // given
+        UserRequest.Register request = new UserRequest.Register(
+                "흥해라한마디",
+                "1000test@gmail.com",
+                "Abc12345!",
+                null
+        );
+
+        // when // then
+        assertThatThrownBy(() -> userService.register(request.toServiceRequest()))
+                .extracting("result.code", "result.message")
+                .contains(-3002, "해당 이메일은 소셜로그인으로 진행해야 합니다.");
+    }
+
     @DisplayName("유저가 자신의 닉네임을 수정한다.")
     @Test
     void updateNickName() {
