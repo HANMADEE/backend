@@ -28,12 +28,12 @@ public class Report extends BaseEntity {
     private Long userId;
 
     @NotNull
+    private Long commentId;
+
+    @NotNull
     private Long reportedUserId;
 
     @NotNull
     private String reportedContent;
-
-    @NotNull
-    private String reportedImageUrl;
 
 }
