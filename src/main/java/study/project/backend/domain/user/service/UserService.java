@@ -35,6 +35,7 @@ public class UserService {
     // 회원가입 API
     @Transactional
     public UserResponse.Register register(UserServiceRequest.Register request) {
+        validateRegister(request);
         Users user = userRepository.save(Users.builder()
                 .authority(ROLE_USER)
                 .nickName(request.getNickName())
@@ -172,4 +173,9 @@ public class UserService {
         }
     }
 
+    private static void validateRegister(UserServiceRequest.Register request) {
+        if (request.getEmail().contains("gmail") || request.getEmail().contains("daum")) {
+            throw new CustomException(NOT_REGISTER_SOCIAL);
+        }
+    }
 }

@@ -21,7 +21,8 @@ public enum Result {
 
     // Comment
     NOT_FOUND_COMMENT(-3000, "존재하지 않는 코멘트"),
-    NOT_MY_COMMENT(-3001, "내가 작성한 코멘트가 아닙니다.");
+    NOT_MY_COMMENT(-3001, "내가 작성한 코멘트가 아닙니다."),
+    NOT_REGISTER_SOCIAL(-3002, "해당 이메일은 소셜로그인으로 진행해야 합니다.");
 
     private final int code;
     private final String message;
