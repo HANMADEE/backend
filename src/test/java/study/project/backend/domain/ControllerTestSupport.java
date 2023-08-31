@@ -9,13 +9,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import study.project.backend.VersionController;
 import study.project.backend.domain.comment.controller.CommentController;
 import study.project.backend.domain.paper.controller.PaperController;
+import study.project.backend.domain.report.controller.ReportController;
 import study.project.backend.domain.user.controller.UserController;
 
 @WebMvcTest(controllers = {
         VersionController.class,
         UserController.class,
         PaperController.class,
-        CommentController.class
+        CommentController.class,
+        ReportController.class
 })
 @AutoConfigureMockMvc(addFilters = false)
 public abstract class ControllerTestSupport {
@@ -37,4 +39,7 @@ public abstract class ControllerTestSupport {
 
     @MockBean
     protected CommentController controller;
+
+    @MockBean
+    protected ReportController reportController;
 }
