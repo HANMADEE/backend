@@ -342,6 +342,35 @@ class PaperServiceTest {
                         tuple("한마디4", "생일"));
     }
 
+    @DisplayName("유저가 롤링페이퍼에 좋아요를 남긴다.")
+    @Test
+    void toggleLikeWithAdd() {
+        // given
+        Users user = saveUser("한마디", "hanmadee@gmail.com");
+        Paper paper = savePaper(user);
+
+        // when
+        PaperResponse.ToggleLike response = paperService.toggleLike(paper.getId(), user.getId());
+
+        // then
+        assertThat(response.getIsAdded()).isTrue();
+    }
+
+    @DisplayName("유저가 롤링페이퍼에 좋아요를 취소한다")
+    @Test
+    void toggleLikeWithCancel() {
+        // given
+        Users user = saveUser("한마디", "hanmadee@gmail.com");
+        Paper paper = savePaper(user);
+        PaperLike paperLike = savePaperLike(user, paper);
+
+        // when
+        PaperResponse.ToggleLike response = paperService.toggleLike(paper.getId(), user.getId());
+
+        // then
+        assertThat(response.getIsAdded()).isFalse();
+    }
+
     private PaperLike savePaperLike(Users user, Paper paper) {
         return paperLikeRepository.save(
                 PaperLike.builder()

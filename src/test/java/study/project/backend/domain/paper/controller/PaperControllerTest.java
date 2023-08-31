@@ -134,4 +134,17 @@ class PaperControllerTest extends ControllerTestSupport {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @DisplayName("롤링페이퍼 좋아요 및 취소 토글 API")
+    @Test
+    void toggleLike() throws Exception {
+        // given
+        MockHttpServletRequestBuilder httpRequest = MockMvcRequestBuilders.post("/paper/like/{paperId}", 1L)
+                .header(AUTHORIZATION, "Bearer {token}");
+
+        // when // then
+        mockMvc.perform(httpRequest)
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }
