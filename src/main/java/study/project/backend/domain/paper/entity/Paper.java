@@ -10,12 +10,11 @@ import study.project.backend.domain.BaseEntity;
 import study.project.backend.domain.comment.entity.Comment;
 import study.project.backend.domain.user.entity.Users;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static jakarta.persistence.FetchType.*;
-import static jakarta.persistence.GenerationType.*;
+import static jakarta.persistence.FetchType.LAZY;
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
 @AllArgsConstructor

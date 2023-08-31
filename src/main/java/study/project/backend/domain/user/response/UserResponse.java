@@ -1,12 +1,14 @@
 package study.project.backend.domain.user.response;
 
-import lombok.*;
-import study.project.backend.domain.user.entity.Authority;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import study.project.backend.domain.user.entity.Users;
 
 import java.util.Optional;
 
-import static lombok.AccessLevel.*;
+import static lombok.AccessLevel.PRIVATE;
 
 public class UserResponse {
 

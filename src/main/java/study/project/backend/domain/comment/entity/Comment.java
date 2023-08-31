@@ -10,10 +10,8 @@ import study.project.backend.domain.BaseEntity;
 import study.project.backend.domain.paper.entity.Paper;
 import study.project.backend.domain.user.entity.Users;
 
-import java.util.Optional;
-
 import static jakarta.persistence.FetchType.LAZY;
-import static jakarta.persistence.GenerationType.*;
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
 @AllArgsConstructor

@@ -9,13 +9,12 @@ import study.project.backend.domain.paper.entity.PaperSort;
 import study.project.backend.global.common.Result;
 import study.project.backend.global.common.exception.CustomException;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static study.project.backend.domain.comment.entity.QComment.comment;
 import static study.project.backend.domain.paper.entity.QPaper.paper;
-import static study.project.backend.domain.paper.entity.QPaperLike.*;
+import static study.project.backend.domain.paper.entity.QPaperLike.paperLike;
 import static study.project.backend.domain.user.entity.QUsers.users;
 
 @Repository

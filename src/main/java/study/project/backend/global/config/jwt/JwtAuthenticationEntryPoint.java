@@ -13,7 +13,7 @@ import study.project.backend.global.common.exception.CustomExceptionResponse;
 
 import java.io.IOException;
 
-import static study.project.backend.global.common.Result.*;
+import static study.project.backend.global.common.Result.FAIL;
 
 
 @Component

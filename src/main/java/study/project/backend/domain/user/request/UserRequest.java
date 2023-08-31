@@ -1,14 +1,9 @@
 package study.project.backend.domain.user.request;
 
-import com.sun.jdi.request.StepRequest;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import study.project.backend.global.common.Result;
-import study.project.backend.global.common.exception.CustomException;
-
-import static study.project.backend.global.common.Result.*;
 
 public class UserRequest {
 

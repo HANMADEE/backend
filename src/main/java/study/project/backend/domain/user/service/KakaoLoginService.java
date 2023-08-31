@@ -16,8 +16,6 @@ import study.project.backend.domain.user.response.KakaoUserResponse;
 import study.project.backend.domain.user.response.UserResponse;
 import study.project.backend.global.common.exception.CustomException;
 
-import java.util.Optional;
-
 import static study.project.backend.global.common.Result.FAIL;
 
 @Service

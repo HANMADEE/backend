@@ -13,7 +13,6 @@ import study.project.backend.domain.user.entity.Users;
 import study.project.backend.domain.user.repository.UserRepository;
 import study.project.backend.domain.user.request.UserServiceRequest;
 import study.project.backend.domain.user.response.UserResponse;
-import study.project.backend.global.common.Result;
 import study.project.backend.global.common.exception.CustomException;
 import study.project.backend.global.config.jwt.TokenProvider;
 

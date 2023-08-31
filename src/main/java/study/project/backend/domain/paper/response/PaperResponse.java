@@ -6,10 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import study.project.backend.domain.comment.entity.Comment;
 import study.project.backend.domain.paper.entity.Paper;
-import study.project.backend.domain.paper.entity.PaperLike;
 import study.project.backend.domain.user.entity.Users;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;

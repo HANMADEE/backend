@@ -5,22 +5,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import study.project.backend.domain.comment.entity.Comment;
 import study.project.backend.domain.comment.repository.CommentRepository;
-import study.project.backend.domain.comment.request.CommentRequest;
 import study.project.backend.domain.comment.request.CommentServiceRequest;
 import study.project.backend.domain.comment.response.CommentResponse;
 import study.project.backend.domain.paper.Repository.PaperRepository;
 import study.project.backend.domain.paper.entity.Paper;
 import study.project.backend.domain.user.entity.Users;
 import study.project.backend.domain.user.repository.UserRepository;
-import study.project.backend.global.common.Result;
 import study.project.backend.global.common.exception.CustomException;
 
 import java.util.List;
 import java.util.Optional;
 
 import static study.project.backend.global.common.Result.*;
-import static study.project.backend.global.common.Result.NOT_FOUND_PAPER;
-import static study.project.backend.global.common.Result.NOT_FOUND_USER;
 
 @Service
 @RequiredArgsConstructor
