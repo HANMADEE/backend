@@ -65,4 +65,17 @@ class CommentControllerTest extends ControllerTestSupport {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @DisplayName("한마디 삭제 API")
+    @Test
+    void deleteComment() throws Exception {
+        // given
+        MockHttpServletRequestBuilder httpRequest = MockMvcRequestBuilders.delete("/comment/{commentId}", 1L)
+                .header(AUTHORIZATION, "Bearer {token}");
+
+        // when // then
+        mockMvc.perform(httpRequest)
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }

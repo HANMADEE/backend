@@ -179,6 +179,27 @@ class CommentServiceTest {
 
     }
 
+    @DisplayName("유저가 자신이 남긴 한마디를 삭제한다.")
+    @Test
+    void deleteComment() {
+        // given
+        Users user = saveUser("한마디", "hanmadee@gmail.com");
+        Users user2 = saveUser("한마디2", "hanmadee2@gmail.com");
+        Paper paper = savePaper(user);
+        Comment comment = saveComment(user2, paper, "테스트");
+        Long commentId = comment.getId();
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // when
+        commentService.deleteComment(commentId, user2.getId());
+
+        // then
+        Optional<Comment> optionalComment = commentRepository.findById(commentId);
+        assertThat(optionalComment.isEmpty()).isTrue();
+    }
+
     public Users saveUser(String nickName, String email) {
         return userRepository.save(
                 Users.builder()
