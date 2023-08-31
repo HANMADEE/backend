@@ -476,18 +476,4 @@ public class PaperControllerDocsTest extends RestDocsSupport {
                 .andExpect(status().isOk())
                 .andDo(document);
     }
-
-    // method
-    public static RestDocumentationResultHandler documentHandler(
-            String identifier, OperationPreprocessor request,
-            OperationPreprocessor response, ResourceSnippetParameters parameters
-    ) {
-        return document(identifier, preprocessRequest(request), preprocessResponse(response), resource(parameters));
-    }
-
-    public static RestDocumentationResultHandler documentHandler(
-            String identifier, OperationPreprocessor response, ResourceSnippetParameters parameters
-    ) {
-        return document(identifier, preprocessResponse(response), resource(parameters));
-    }
 }
