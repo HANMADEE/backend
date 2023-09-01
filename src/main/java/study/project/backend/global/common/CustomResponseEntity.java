@@ -40,7 +40,8 @@ public class CustomResponseEntity<T> {
 
     public static <T> CustomResponseEntity<T> fail(Result result) {
         return CustomResponseEntity.<T>builder()
-                .result(result)
+                .code(result.getCode())
+                .message(result.getMessage())
                 .build();
     }
 

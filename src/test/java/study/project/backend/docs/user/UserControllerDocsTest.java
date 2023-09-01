@@ -75,7 +75,7 @@ public class UserControllerDocsTest extends RestDocsSupport {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         resource(ResourceSnippetParameters.builder()
-                                .tag("유저 API")
+                                .tag("1. User API")
                                 .summary("회원가입 API")
                                 .requestFields(
                                         fieldWithPath("nickName").type(STRING).description("닉네임"),
@@ -119,7 +119,7 @@ public class UserControllerDocsTest extends RestDocsSupport {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         resource(ResourceSnippetParameters.builder()
-                                .tag("유저 API")
+                                .tag("1. User API")
                                 .summary("소셜 로그인 API")
                                 .formParameters(
                                         parameterWithName("code").description("발급받은 인가코드"),
@@ -156,7 +156,7 @@ public class UserControllerDocsTest extends RestDocsSupport {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         resource(ResourceSnippetParameters.builder()
-                                .tag("유저 API")
+                                .tag("1. User API")
                                 .summary("닉네임 수정 API")
                                 .requestHeaders(
                                         headerWithName("Authorization")
@@ -191,7 +191,7 @@ public class UserControllerDocsTest extends RestDocsSupport {
                 .andDo(document("readUser",
                         preprocessResponse(prettyPrint()),
                         resource(ResourceSnippetParameters.builder()
-                                .tag("유저 API")
+                                .tag("1. User API")
                                 .summary("내 정보 조회 API")
                                 .requestHeaders(
                                         headerWithName("Authorization")
@@ -250,7 +250,7 @@ public class UserControllerDocsTest extends RestDocsSupport {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         resource(ResourceSnippetParameters.builder()
-                                .tag("유저 API")
+                                .tag("1. User API")
                                 .summary("유저 검색 API")
                                 .requestFields(
                                         fieldWithPath("nickName").type(STRING).description("유저 닉네임").optional(),
@@ -298,7 +298,7 @@ public class UserControllerDocsTest extends RestDocsSupport {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         resource(ResourceSnippetParameters.builder()
-                                .tag("유저 API")
+                                .tag("1. User API")
                                 .summary("로그인 API")
                                 .requestFields(
                                         fieldWithPath("email").type(STRING).description("이메일"),
@@ -336,7 +336,7 @@ public class UserControllerDocsTest extends RestDocsSupport {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         resource(ResourceSnippetParameters.builder()
-                                .tag("유저 API")
+                                .tag("1. User API")
                                 .summary("내 정보 수정 API")
                                 .requestFields(
                                         fieldWithPath("email").type(STRING).description("변경할 이메일"),
@@ -365,7 +365,7 @@ public class UserControllerDocsTest extends RestDocsSupport {
                 .contentType(APPLICATION_JSON);
 
         ResourceSnippetParameters parameters = ResourceSnippetParameters.builder()
-                .tag("유저 API")
+                .tag("1. User API")
                 .summary("비밀번호 변경 API")
                 .requestHeaders(
                         headerWithName("Authorization")

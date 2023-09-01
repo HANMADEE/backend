@@ -43,7 +43,7 @@ public class ReportControllerDocsTest extends RestDocsSupport {
                 .contentType(APPLICATION_JSON);
 
         ResourceSnippetParameters parameters = ResourceSnippetParameters.builder()
-                .tag("신고 API")
+                .tag("4. Report API")
                 .summary("유저 신고하기 API")
                 .requestHeaders(
                         headerWithName("Authorization")

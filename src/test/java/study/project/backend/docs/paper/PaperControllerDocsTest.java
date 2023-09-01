@@ -64,7 +64,7 @@ public class PaperControllerDocsTest extends RestDocsSupport {
                 .contentType(APPLICATION_JSON);
 
         ResourceSnippetParameters parameters = ResourceSnippetParameters.builder()
-                .tag("롤링페이퍼 API")
+                .tag("2. RollingPaper API")
                 .summary("롤링페이퍼 만들기 API")
                 .requestHeaders(
                         headerWithName("Authorization")
@@ -120,7 +120,7 @@ public class PaperControllerDocsTest extends RestDocsSupport {
                 .param("giftedUserId", "3");
 
         ResourceSnippetParameters parameters = ResourceSnippetParameters.builder()
-                .tag("롤링페이퍼 API")
+                .tag("2. RollingPaper API")
                 .summary("롤링페이퍼 선물하기 API")
                 .requestHeaders(
                         headerWithName("Authorization")
@@ -207,7 +207,7 @@ public class PaperControllerDocsTest extends RestDocsSupport {
                 RestDocumentationRequestBuilders.get("/paper/{paperId}", 1L);
 
         ResourceSnippetParameters parameters = ResourceSnippetParameters.builder()
-                .tag("롤링페이퍼 API")
+                .tag("2. RollingPaper API")
                 .summary("롤링페이퍼 조회 API")
                 .pathParameters(
                         parameterWithName("paperId").description("롤링페이퍼 ID"))
@@ -270,7 +270,7 @@ public class PaperControllerDocsTest extends RestDocsSupport {
                 .header(AUTHORIZATION, "Bearer {token}");
 
         ResourceSnippetParameters parameters = ResourceSnippetParameters.builder()
-                .tag("롤링페이퍼 API")
+                .tag("2. RollingPaper API")
                 .summary("내 롤링페이퍼 조회 API")
                 .requestHeaders(
                         headerWithName("Authorization")
@@ -310,7 +310,7 @@ public class PaperControllerDocsTest extends RestDocsSupport {
                 .contentType(APPLICATION_JSON);
 
         ResourceSnippetParameters parameters = ResourceSnippetParameters.builder()
-                .tag("롤링페이퍼 API")
+                .tag("2. RollingPaper API")
                 .summary("롤링페이퍼 수정 API")
                 .requestHeaders(
                         headerWithName("Authorization")
@@ -346,7 +346,7 @@ public class PaperControllerDocsTest extends RestDocsSupport {
                 .header(AUTHORIZATION, "Bearer {token}");
 
         ResourceSnippetParameters parameters = ResourceSnippetParameters.builder()
-                .tag("롤링페이퍼 API")
+                .tag("2. RollingPaper API")
                 .summary("롤링페이퍼 삭제 API")
                 .requestHeaders(
                         headerWithName("Authorization")
@@ -410,7 +410,7 @@ public class PaperControllerDocsTest extends RestDocsSupport {
                 .param("sort", "LIKES");
 
         ResourceSnippetParameters parameters = ResourceSnippetParameters.builder()
-                .tag("롤링페이퍼 API")
+                .tag("2. RollingPaper API")
                 .summary("롤링페이퍼 정렬 전체 조회 API")
                 .queryParameters(
                         parameterWithName("sort").description("parameter : 'LIKES' or 'LATEST' "))
@@ -452,7 +452,7 @@ public class PaperControllerDocsTest extends RestDocsSupport {
                 .header(AUTHORIZATION, "Bearer {token}");
 
         ResourceSnippetParameters parameters = ResourceSnippetParameters.builder()
-                .tag("롤링페이퍼 API")
+                .tag("2. RollingPaper API")
                 .summary("롤링페이퍼 좋아요 및 취소 토글 API")
                 .requestHeaders(
                         headerWithName("Authorization")

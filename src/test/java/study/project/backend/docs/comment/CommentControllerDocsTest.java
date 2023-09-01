@@ -72,7 +72,7 @@ public class CommentControllerDocsTest extends RestDocsSupport {
                 .contentType(APPLICATION_JSON);
 
         ResourceSnippetParameters parameters = ResourceSnippetParameters.builder()
-                .tag("코멘트(한마디) API")
+                .tag("3. Comment API")
                 .summary("한마디 작성 API")
                 .requestHeaders(headerWithName("Authorization")
                         .description("Swagger 요청시 해당 입력칸이 아닌 우측 상단 자물쇠 " +
@@ -143,7 +143,7 @@ public class CommentControllerDocsTest extends RestDocsSupport {
                 .header(AUTHORIZATION, "Bearer {token}");
 
         ResourceSnippetParameters parameters = ResourceSnippetParameters.builder()
-                .tag("코멘트(한마디) API")
+                .tag("3. Comment API")
                 .summary("내 한마디 조회 API")
                 .requestHeaders(
                         headerWithName("Authorization")
@@ -187,7 +187,7 @@ public class CommentControllerDocsTest extends RestDocsSupport {
                 .contentType(APPLICATION_JSON);
 
         ResourceSnippetParameters parameters = ResourceSnippetParameters.builder()
-                .tag("코멘트(한마디) API")
+                .tag("3. Comment API")
                 .summary("한마디 수정 API")
                 .requestHeaders(
                         headerWithName("Authorization")
@@ -226,7 +226,7 @@ public class CommentControllerDocsTest extends RestDocsSupport {
                 .header(AUTHORIZATION, "Bearer {token}");
 
         ResourceSnippetParameters parameters = ResourceSnippetParameters.builder()
-                .tag("코멘트(한마디) API")
+                .tag("3. Comment API")
                 .summary("한마디 삭제 API")
                 .requestHeaders(
                         headerWithName("Authorization")
