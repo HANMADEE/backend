@@ -217,7 +217,7 @@ class UserControllerTest extends ControllerTestSupport {
     @Test
     void logout() throws Exception {
         // given
-        MockHttpServletRequestBuilder httpRequest = MockMvcRequestBuilders.get("/auth/logout")
+        MockHttpServletRequestBuilder httpRequest = MockMvcRequestBuilders.delete("/auth/logout")
                 .header(AUTHORIZATION, "Bearer {token}");
 
         // when // then

@@ -34,7 +34,7 @@ public class UserController {
     }
 
     // 로그아웃 API
-    @GetMapping("/logout")
+    @DeleteMapping("/logout")
     public CustomResponseEntity<Void> logout(
             @AuthenticationPrincipal Long userId,
             @RequestHeader(value = "Authorization") String atk

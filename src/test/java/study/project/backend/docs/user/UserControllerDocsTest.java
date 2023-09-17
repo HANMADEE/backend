@@ -397,7 +397,7 @@ public class UserControllerDocsTest extends RestDocsSupport {
     @Test
     void logout() throws Exception {
         // given
-        MockHttpServletRequestBuilder httpRequest = RestDocumentationRequestBuilders.get("/auth/logout")
+        MockHttpServletRequestBuilder httpRequest = RestDocumentationRequestBuilders.delete("/auth/logout")
                 .header(AUTHORIZATION, "Bearer {token}");
 
         ResourceSnippetParameters parameters = ResourceSnippetParameters.builder()
