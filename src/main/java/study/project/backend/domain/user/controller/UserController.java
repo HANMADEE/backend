@@ -33,6 +33,15 @@ public class UserController {
         return CustomResponseEntity.success(userService.login(request.toServiceRequest()));
     }
 
+    // 로그아웃 API
+    @GetMapping("/logout")
+    public CustomResponseEntity<Void> logout(
+            @AuthenticationPrincipal Long userId,
+            @RequestHeader(value = "Authorization") String atk
+    ) {
+        return CustomResponseEntity.success(userService.logout(userId, atk));
+    }
+
     // 소셜 로그인 API
     @PostMapping("/signin")
     public CustomResponseEntity<UserResponse.Login> socialLogin(
@@ -78,8 +87,8 @@ public class UserController {
     // 비밀번호 변경 API
     @PatchMapping("/password")
     public CustomResponseEntity<Void> updatePassword(
-        @AuthenticationPrincipal Long userId,
-        @RequestBody @Valid UserRequest.UpdatePassword request
+            @AuthenticationPrincipal Long userId,
+            @RequestBody @Valid UserRequest.UpdatePassword request
     ) {
         return CustomResponseEntity.success(userService.updatePassword(userId, request.toServiceRequest()));
     }

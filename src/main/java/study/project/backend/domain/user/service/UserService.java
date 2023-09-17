@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import study.project.backend.domain.redis.service.RedisService;
 import study.project.backend.domain.user.controller.Platform;
 import study.project.backend.domain.user.entity.Users;
 import study.project.backend.domain.user.repository.UserRepository;
@@ -26,6 +27,7 @@ import static study.project.backend.global.common.Result.*;
 @Transactional(readOnly = true)
 public class UserService {
 
+    private final RedisService redisService;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TokenProvider tokenProvider;
     private final List<OAuth2LoginService> oAuth2LoginServices;
@@ -128,6 +130,15 @@ public class UserService {
 
         user.toUpdatePassword(passwordEncoder.encode(request.getNewPassword()));
         return null;
+    }
+
+
+    public Void logout(Long userId, String atk) {
+        Users user = getUser(userId);
+        String decodeAtk = atk.substring(7);
+        Long expiration = tokenProvider.getExpiration(decodeAtk);
+
+        return redisService.logoutFromRedis(user.getEmail(), decodeAtk, expiration);
     }
 
 
