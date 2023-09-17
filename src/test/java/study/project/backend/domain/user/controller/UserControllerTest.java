@@ -212,4 +212,17 @@ class UserControllerTest extends ControllerTestSupport {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @DisplayName("로그아웃 API")
+    @Test
+    void logout() throws Exception {
+        // given
+        MockHttpServletRequestBuilder httpRequest = MockMvcRequestBuilders.get("/auth/logout")
+                .header(AUTHORIZATION, "Bearer {token}");
+
+        // when // then
+        mockMvc.perform(httpRequest)
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }

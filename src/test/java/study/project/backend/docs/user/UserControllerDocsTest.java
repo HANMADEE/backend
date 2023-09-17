@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import study.project.backend.docs.RestDocsSupport;
 import study.project.backend.domain.user.controller.Platform;
 import study.project.backend.domain.user.controller.UserController;
@@ -272,7 +273,7 @@ public class UserControllerDocsTest extends RestDocsSupport {
     @Test
     void login() throws Exception {
         // given
-        UserRequest.Login request = new UserRequest.Login("1000test@naver.com","Abc12345!");
+        UserRequest.Login request = new UserRequest.Login("1000test@naver.com", "Abc12345!");
 
         given(userService.login(any()))
                 .willReturn(
@@ -351,7 +352,7 @@ public class UserControllerDocsTest extends RestDocsSupport {
 
     @DisplayName("비밀번호 변경 API")
     @Test
-    void updatePassword() throws Exception{
+    void updatePassword() throws Exception {
         // given
         UserRequest.UpdatePassword request = new UserRequest.UpdatePassword(
                 "Abc1234!",
@@ -384,6 +385,36 @@ public class UserControllerDocsTest extends RestDocsSupport {
 
         RestDocumentationResultHandler document =
                 documentHandler("updatePassword", prettyPrint(), prettyPrint(), parameters);
+
+        // when // then
+        mockMvc.perform(httpRequest)
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document);
+    }
+
+    @DisplayName("로그아웃 API")
+    @Test
+    void logout() throws Exception {
+        // given
+        MockHttpServletRequestBuilder httpRequest = RestDocumentationRequestBuilders.get("/auth/logout")
+                .header(AUTHORIZATION, "Bearer {token}");
+
+        ResourceSnippetParameters parameters = ResourceSnippetParameters.builder()
+                .tag("1. User API")
+                .summary("로그아웃 API")
+                .requestHeaders(
+                        headerWithName("Authorization")
+                                .description("Swagger 요청시 해당 입력칸이 아닌 우측 상단 자물쇠 " +
+                                        "또는 Authorize 버튼을 이용해 토큰을 넣어주세요"))
+                .responseFields(
+                        fieldWithPath("code").type(NUMBER).description("상태 코드"),
+                        fieldWithPath("message").type(STRING).description("상태 메세지"))
+                .responseSchema(Schema.schema("Default"))
+                .build();
+
+        RestDocumentationResultHandler document =
+                documentHandler("logout", prettyPrint(), parameters);
 
         // when // then
         mockMvc.perform(httpRequest)
